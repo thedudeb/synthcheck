@@ -1,0 +1,35 @@
+.synthcheck-badge {
+  all: initial;
+  align-items: center;
+  background: #171b2c;
+  border: 1px solid #ffffff4d;
+  border-radius: 999px;
+  box-shadow: 0 3px 12px #0000004d;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: help;
+  display: block;
+  font: 700 12px/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  left: 0;
+  letter-spacing: .01em;
+  max-width: min(210px, calc(100vw - 12px));
+  overflow: hidden;
+  padding: 7px 10px;
+  pointer-events: auto;
+  position: fixed;
+  text-overflow: ellipsis;
+  top: 0;
+  white-space: nowrap;
+  z-index: 2147483647;
+}
+
+.synthcheck-badge--analyzing { background: #3d4270; }
+.synthcheck-badge--complete { background: #164d3a; }
+.synthcheck-badge--unavailable { background: #5e2632; }
+.synthcheck-badge:focus-visible { outline: 3px solid #67b7ff; outline-offset: 2px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .synthcheck-badge--analyzing { animation: synthcheck-pulse 1.2s ease-in-out infinite alternate; }
+}
+
+@keyframes synthcheck-pulse { to { opacity: .72; } }
