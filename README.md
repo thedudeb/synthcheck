@@ -4,7 +4,7 @@
 
 SynthCheck is an MIT-licensed Chrome extension that estimates whether images on ordinary webpages are AI-generated. Image decoding, preprocessing, and ONNX inference run inside Chrome; pixels and image-derived features are never uploaded to an inference service.
 
-> **Submission status:** the exact 22 MB browser artifact scores **77.6% balanced accuracy** at the required displayed 65% threshold on a frozen 1,000-image diagnostic sample. That clears the bounty's 75.0% public development gate, but only the maintainers' private benchmark can determine whether a claim qualifies.
+> **Submission status:** the exact 22 MB browser artifact scores **77.6% balanced accuracy** on the original frozen 1,000-image diagnostic sample, but a newer independent frontier-generator audit reaches only **66.25%** on originals and **55.0%–59.5%** after screenshot/recompression. The privacy/offline implementation is ready; modern-generator accuracy remains a material risk, and only the maintainers' private benchmark can determine whether a claim qualifies.
 
 ## Capabilities
 
@@ -63,6 +63,8 @@ The Chrome test prepares and verifies the bundled model, restarts the browser, d
 
 Benchmark preparation and reproduction instructions are in [benchmark/README.md](benchmark/README.md). The checked-in [quantized diagnostic report](benchmark/results/community-forensics-int8-test.json) records the model, calibration, dataset manifest, runtime, threshold, and source-level metrics.
 
+The separate [frontier robustness audit](docs/frontier-robustness-audit.md) tests Flux.2, GPT Image 1.5/2, Imagen 4, Nano Banana Pro, Adobe Firefly, Chrome screenshots, and two levels of social-media-style recompression without tuning the shipping model.
+
 For evidence, known limitations, and the manual POIDH claim procedure, see the [submission-readiness report](docs/submission-readiness.md).
 
 ## Privacy and network behavior
@@ -77,7 +79,7 @@ For evidence, known limitations, and the manual POIDH claim procedure, see the [
 
 - Cross-origin policy, authenticated URLs, canvas/WebGL content, CSS backgrounds, SVG edge cases, and video frames can prevent access to pixels; the UI reports unavailable analyses rather than inventing scores.
 - Very small images under 64×64 are excluded as non-content UI assets.
-- Detection quality varies by generator and transformation. The diagnostic report is weakest on SD3 and Midjourney 6, and the private bounty result may differ.
+- Detection quality varies sharply by generator and transformation. The independent frontier audit is especially weak on Flux.2, GPT Image 2, and Nano Banana Pro; recompression further reduces synthetic recall.
 
 ## License
 

@@ -22,9 +22,11 @@ function sha256(bytes: Uint8Array | string): string {
 
 const split = argument("split", "validation");
 const candidate = argument("candidate", "baseline");
-const datasetDirectory = path.resolve(`benchmark/data/defactify-${split}`);
+const datasetDirectory = path.resolve(argument("dataset-dir", `benchmark/data/defactify-${split}`));
 const manifestPath = path.join(datasetDirectory, "manifest.jsonl");
 const selectionPath = path.join(datasetDirectory, "selection.json");
+const resultName = argument("result-name", `${candidate}-${split}`);
+if (!/^[a-z0-9][a-z0-9._-]*$/i.test(resultName)) throw new Error(`Invalid result name: ${resultName}`);
 const candidateSpec = candidate === "community-forensics" || candidate === "community-forensics-int8"
   ? {
       id: candidate === "community-forensics-int8"
@@ -179,7 +181,7 @@ if (!session.inputNames.includes(MODEL_SPEC.inputName) || !session.outputNames.i
 }
 
 await mkdir(resultDirectory, { recursive: true });
-const predictionPath = path.join(resultDirectory, `${candidate}-${split}-predictions.jsonl`);
+const predictionPath = path.join(resultDirectory, `${resultName}-predictions.jsonl`);
 const predictionStream = createWriteStream(predictionPath, { flags: "w" });
 const predictions: Prediction[] = [];
 
@@ -355,12 +357,14 @@ const summary = {
     manifest: path.relative(process.cwd(), manifestPath),
     manifestSha256: sha256(manifestText),
     split,
-    sampleMethod: "lowest SHA-256 priorities within the scanned row universe, stratified by source",
+    sampleMethod: selection && typeof selection.strategy === "string"
+      ? selection.strategy
+      : "lowest SHA-256 priorities within the scanned row universe, stratified by source",
     selection,
     diagnosticSubset: realLimit > 0 ? { realLimit, perGeneratorLimit } : null,
   },
   metrics,
 };
-const summaryPath = path.join(resultDirectory, `${candidate}-${split}.json`);
+const summaryPath = path.join(resultDirectory, `${resultName}.json`);
 await writeFile(summaryPath, `${JSON.stringify(summary, null, 2)}\n`);
 console.log(JSON.stringify(summary, null, 2));

@@ -42,3 +42,17 @@ Select or combine a detector with independently demonstrated cross-domain rankin
 ### Next checkpoint
 
 Complete the final network/privacy audit, package inspection, documentation verification, and public-repository release readiness review before submitting a bounty claim.
+
+## 2026-08-13 — Independent frontier robustness audit
+
+- Froze a second, independently sourced 400-image set before inference: 200 held-out real images and 200 images from Flux.2, GPT Image 1.5/2, Nano Banana Pro, Imagen 4, and Adobe Firefly.
+- Pinned OpenFake, Qwen Image Bench, and Synthbuster revisions and licenses; kept all source images and per-image predictions out of Git.
+- Evaluated the unchanged shipping model, calibration, and 65% threshold across 400 originals plus Chrome screenshot, social JPEG q75, and heavy two-pass recompression variants (1,600 predictions total).
+- Recorded 66.25% balanced accuracy on originals, 55.0% on screenshots, 59.5% after standard social JPEG, and 56.5% after heavy recompression.
+- Identified clear modern-generator gaps: original recall was 8% for Flux.2 Klein 9B, 16% for GPT Image 2, and 31.6% for Nano Banana Pro.
+- Updated submission language so the older 77.6% diagnostic cannot be mistaken for robust frontier performance.
+- Passed lint, type checking, 15 tests, and a production build under Node 24 after adding the audit harness and reports.
+
+### Next checkpoint
+
+Treat the privacy/offline implementation as complete, but replace or ensemble the detector before claiming reliable coverage of current generators. Preserve this audit as a no-tuning comparison set.

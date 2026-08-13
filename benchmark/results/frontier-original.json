@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "executedAt": "2026-08-13T17:28:46.950Z",
+  "runtime": {
+    "node": "v24.19.0",
+    "onnxruntimeWeb": "1.22.0",
+    "threads": 1
+  },
+  "model": {
+    "id": "OwensLab/commfor-model-224@26afc31:int8-dynamic",
+    "sha256": "9c7a92aafb3a5c14b1626a4cb10a241205254620c6d4a6cc60ca91c15533fc20",
+    "bytes": 23433075
+  },
+  "calibration": {
+    "method": "Monotonic log-odds intercept calibration",
+    "path": "benchmark/candidates/community_forensics/calibration-int8.json",
+    "sha256": "90244355dd4a6000d13f5f9bcc27350ce32707c3714b49b26daa4f3377749abb",
+    "slope": 1,
+    "intercept": 3.563478187572664
+  },
+  "dataset": {
+    "manifest": "benchmark/data/frontier-original/manifest.jsonl",
+    "manifestSha256": "976bb72cb0023107468084a3b60e00e5b5c08738b4905333187dd24c0f823679",
+    "split": "original",
+    "sampleMethod": "OpenFake: first N records in pinned filter order (ascending row index); Qwen and Synthbuster: lowest SHA-256 filename priorities; all strata frozen before inference",
+    "selection": {
+      "schemaVersion": 1,
+      "frozenAt": "2026-08-13",
+      "scoreBlind": true,
+      "threshold": 0.65,
+      "strategy": "OpenFake: first N records in pinned filter order (ascending row index); Qwen and Synthbuster: lowest SHA-256 filename priorities; all strata frozen before inference",
+      "openFake": {
+        "dataset": "ComplexDataLab/OpenFake",
+        "revision": "3fd1109dc3258874243fa31c5bda9ee24260163b",
+        "split": "test",
+        "totalRows": 91398,
+        "sourceUniverseCounts": {
+          "test:docci": 1179,
+          "test:imagenet": 2386,
+          "test:flux.2-klein-9b": 636,
+          "test:gpt-image-1.5": 434,
+          "test:gpt-image-2": 41,
+          "test:nano-banana-pro": 19
+        },
+        "targets": {
+          "docci": 100,
+          "imagenet": 100,
+          "flux.2-klein-9b": 50,
+          "gpt-image-1.5": 25,
+          "gpt-image-2": 25,
+          "nano-banana-pro": 19
+        },
+        "license": "CC-BY-NC-4.0"
+      },
+      "qwenImageBench": {
+        "dataset": "Qwen/Qwen-Image-Bench",
+        "revision": "d2493deb153b020cf169c7e3f57d15e4dd697038",
+        "source": "imagen-4.0",
+        "target": 31,
+        "license": "Apache-2.0"
+      },
+      "synthbuster": {
+        "record": "10066460",
+        "revision": "v1",
+        "archiveBytes": 12372557226,
+        "archiveMd5": "0695bd328e16ea21c5c9cc2ae1d994ff",
+        "fireflyUniverse": 1000,
+        "target": 50,
+        "license": "CC-BY-NC-SA-4.0"
+      }
+    },
+    "diagnosticSubset": null
+  },
+  "metrics": {
+    "threshold": 0.65,
+    "count": 400,
+    "realCount": 200,
+    "syntheticCount": 200,
+    "trueRealRate": 0.86,
+    "trueSyntheticRate": 0.465,
+    "balancedAccuracy": 0.6625,
+    "accuracy": 0.6625,
+    "bySource": [
+      {
+        "source": "adobe-firefly",
+        "count": 50,
+        "accuracy": 0.76,
+        "meanAiLikelihood": 0.7966752814570607
+      },
+      {
+        "source": "docci",
+        "count": 100,
+        "accuracy": 0.87,
+        "meanAiLikelihood": 0.20541648437346943
+      },
+      {
+        "source": "flux.2-klein-9b",
+        "count": 50,
+        "accuracy": 0.08,
+        "meanAiLikelihood": 0.1660777260848235
+      },
+      {
+        "source": "gpt-image-1.5",
+        "count": 25,
+        "accuracy": 0.52,
+        "meanAiLikelihood": 0.5408106254106833
+      },
+      {
+        "source": "gpt-image-2",
+        "count": 25,
+        "accuracy": 0.16,
+        "meanAiLikelihood": 0.2994403653042867
+      },
+      {
+        "source": "imagen-4.0",
+        "count": 31,
+        "accuracy": 0.9032258064516129,
+        "meanAiLikelihood": 0.9119574521461683
+      },
+      {
+        "source": "imagenet",
+        "count": 100,
+        "accuracy": 0.85,
+        "meanAiLikelihood": 0.2570119402577972
+      },
+      {
+        "source": "nano-banana-pro",
+        "count": 19,
+        "accuracy": 0.3157894736842105,
+        "meanAiLikelihood": 0.5035777429549483
+      }
+    ]
+  }
+}

@@ -49,6 +49,22 @@ npm run benchmark:run -- \
 
 Use `--split test` only to reproduce the already-exposed diagnostic report. It must not be used to tune future models or calibration.
 
+## Frontier robustness audit
+
+The independent modern-generator audit uses pinned OpenFake, Qwen Image Bench, and Synthbuster sources. It freezes a balanced 400-image original set, then generates Chrome screenshot, social JPEG, and heavy two-pass recompression variants:
+
+```sh
+npm run benchmark:frontier:prepare
+npm run benchmark:frontier:transform
+npm run benchmark:run -- --split original --dataset-dir benchmark/data/frontier-original --result-name frontier-original --calibration benchmark/candidates/community_forensics/calibration-int8.json
+npm run benchmark:run -- --split screenshot --dataset-dir benchmark/data/frontier-screenshot --result-name frontier-screenshot --calibration benchmark/candidates/community_forensics/calibration-int8.json
+npm run benchmark:run -- --split social-q75 --dataset-dir benchmark/data/frontier-social-q75 --result-name frontier-social-q75 --calibration benchmark/candidates/community_forensics/calibration-int8.json
+npm run benchmark:run -- --split social-heavy --dataset-dir benchmark/data/frontier-social-heavy --result-name frontier-social-heavy --calibration benchmark/candidates/community_forensics/calibration-int8.json
+npm run benchmark:frontier:summarize
+```
+
+See the [methodology and candid results](../docs/frontier-robustness-audit.md). This audit was not used to tune the shipping release.
+
 ## Interpretation
 
 - `balancedAccuracy` is the mean of real recall and synthetic recall.
