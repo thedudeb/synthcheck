@@ -15,7 +15,7 @@ SynthCheck is a privacy-preserving Chrome extension that estimates whether image
 
 ## Requirements
 
-- Node.js 18.18 or newer for development and building only.
+- Node.js 20.9 or newer for development, benchmarking, and building only.
 - Google Chrome 121 or newer for the unpacked production extension.
 - Internet access during initial model setup. Detection works offline afterward for images whose pixels are available to the browser.
 

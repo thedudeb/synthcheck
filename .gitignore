@@ -3,5 +3,10 @@ dist/
 coverage/
 .DS_Store
 benchmark/data/
-benchmark/results/*.json
+benchmark/models/
+benchmark/candidates/*/*.pth
+benchmark/candidates/*/*.onnx
+benchmark/.venv/
+**/__pycache__/
+benchmark/results/*-predictions.jsonl
 *.log

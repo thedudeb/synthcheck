@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { centerCropGeometry, imageDataToNormalizedChw, softmaxSynthetic } from "../src/inference/preprocess";
+import {
+  centerCropGeometry,
+  imageDataToNormalizedChw,
+  rgbBytesToNormalizedChw,
+  softmaxSynthetic,
+} from "../src/inference/preprocess";
 
 describe("image preprocessing", () => {
   it("normalizes RGB pixels into planar CHW order", () => {
@@ -28,6 +33,26 @@ describe("image preprocessing", () => {
       sourceSize: 175,
       targetSize: 224,
     });
+  });
+
+  it("produces the same tensor from equivalent RGB and RGBA buffers", () => {
+    const rgb = rgbBytesToNormalizedChw(
+      new Uint8Array([10, 20, 30, 200, 210, 220]),
+      2,
+      1,
+      3,
+      [0.5, 0.5, 0.5],
+      [0.5, 0.5, 0.5],
+    );
+    const rgba = rgbBytesToNormalizedChw(
+      new Uint8ClampedArray([10, 20, 30, 255, 200, 210, 220, 128]),
+      2,
+      1,
+      4,
+      [0.5, 0.5, 0.5],
+      [0.5, 0.5, 0.5],
+    );
+    expect(rgb).toEqual(rgba);
   });
 });
 

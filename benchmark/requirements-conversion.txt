@@ -1,0 +1,6 @@
+torch==2.7.1
+torchvision==0.22.1
+timm==1.0.24
+onnx==1.18.0
+onnxruntime==1.22.0
+onnxscript==0.3.2

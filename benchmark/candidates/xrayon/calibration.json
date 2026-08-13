@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "method": "Platt scaling over raw probability logits",
+  "slope": 1.255764663883145,
+  "intercept": 2.578414751108438,
+  "fittedOn": {
+    "split": "validation",
+    "count": 500,
+    "predictions": "benchmark/results/xRayon-convnext-ai-images-detector-validation-predictions.jsonl",
+    "predictionsSha256": "5ec3cad01fa57286609626cccf91d694beda71f4d487e4d92530087e3e31ed81"
+  },
+  "modelSha256": "905511ee9a4fe3db0cc36d943e0fe21ece4323a8f8f5c7bbfcf3e9d45cbdfbbd",
+  "objective": "unweighted binary cross-entropy",
+  "regularization": 0.000001,
+  "iterations": 7,
+  "logLossBefore": 0.5489748383406641,
+  "logLossAfter": 0.35373212294629036,
+  "note": "Freeze these parameters before evaluating any test or external dataset."
+}

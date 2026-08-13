@@ -16,5 +16,5 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["src", "tests", "scripts/**/*.mjs", "eslint.config.js"]
+  "include": ["src", "tests", "benchmark", "scripts/**/*.mjs", "eslint.config.js"]
 }
