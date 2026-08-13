@@ -61,6 +61,8 @@ The Chrome test prepares and verifies the bundled model, restarts the browser, d
 
 Benchmark preparation and reproduction instructions are in [benchmark/README.md](benchmark/README.md). The checked-in [quantized diagnostic report](benchmark/results/community-forensics-int8-test.json) records the model, calibration, dataset manifest, runtime, threshold, and source-level metrics.
 
+For evidence, known limitations, and the manual POIDH claim procedure, see the [submission-readiness report](docs/submission-readiness.md).
+
 ## Privacy and network behavior
 
 - Inference never calls a cloud API or localhost service.
