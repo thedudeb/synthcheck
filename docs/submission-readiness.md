@@ -1,44 +1,44 @@
 # Bounty submission readiness
 
-Status: **privacy/offline engineering-ready, accuracy qualification uncertain**. This report does not claim that SynthCheck passes the private benchmark.
+Status: **ready to submit with evidence, private qualification not guaranteed**. SynthCheck satisfies the local/offline engineering requirements and its frozen modern test clears the public 75% target on every tested variant. Only the maintainers can determine the private benchmark result.
 
 ## Evidence
 
 | Requirement | Evidence |
 | --- | --- |
-| Native Chrome MV3 | `src/static/manifest.json`; clean-profile Chrome smoke test passed |
+| Native Chrome MV3 | `src/static/manifest.json`; clean-profile Chrome smoke test |
 | Browser-local inference | ONNX Runtime Web/WASM in the offscreen extension document; no inference API or localhost dependency |
-| Offline after setup | Chrome test prepared the bundled model, restarted the browser, disabled networking, and rendered a numeric score |
-| Fixed 65% threshold | Shared `AI_THRESHOLD` contract used by classification, UI wording, and benchmark metrics |
-| Accuracy gate | Exact 23,433,075-byte INT8 artifact: 77.6% balanced accuracy on the frozen 1,000-image diagnostic sample at displayed threshold 0.65 |
-| Independent robustness audit | 66.25% on 400 frontier-generator/original images; 55.0%–59.5% on screenshot and recompression variants, with model and threshold frozen |
-| Model integrity | SHA-256 `9c7a92aafb3a5c14b1626a4cb10a241205254620c6d4a6cc60ca91c15533fc20` in source, build, setup verification, and benchmark report |
-| Reproducibility | A clean Git archive completed `npm ci` and `npm run verify`; its bundled model digest matched the repository build |
-| Automated verification | 15 unit/manifest tests, lint, type-check, production build, Chrome end-to-end test, and npm production audit passed |
-| Open licensing | Project MIT license; Community Forensics model and source report MIT licensing; provenance is documented |
-| Public source | `https://github.com/thedudeb/ai-poidhbot`, release tag `synthcheck-bounty-v1` |
+| Offline after setup | Browser test prepares the bundled model, restarts Chrome, disables networking, and requires a numeric score |
+| Fixed 65% threshold | Shared `AI_THRESHOLD` contract used by classification, UI, calibration, and benchmark metrics |
+| Modern accuracy test | Exact 23,433,075-byte INT8 artifact: 92.33% original, 94.0% screenshot, 90.0% JPEG-75, 87.33% heavy-JPEG balanced accuracy on a frozen 600-image test |
+| Class-recall gates | Across the modern test: real recall 89.33%–92.67%; synthetic recall 82%–96%; every generator/variant at least 66% |
+| Legacy regression | 84.5% original, 74.25% screenshot, 82.5% JPEG-75, 76.75% heavy-JPEG; disclosed as exposed/non-independent evidence |
+| Model integrity | SHA-256 `d0712f939ef34ab9470eac357e483e188672f472798d4093ddb5d7e5030cd9f4` in source, build, setup verification, and reports |
+| Reproducibility | Pinned datasets, deterministic selection, manifest hashes, training/export code, quantization, calibration gates, and exact WASM reports |
+| Automated verification | Lint, strict type-check, unit/manifest tests, production build, and Chrome end-to-end offline test |
+| Open licensing | Project/upstream model MIT; Qwen Image Bench Apache-2.0; DOCCI CC BY 4.0; sampled Open Images attribution retained |
+| Public source | `https://github.com/thedudeb/synthcheck` |
 
-Primary aggregate report: [`benchmark/results/community-forensics-int8-test.json`](../benchmark/results/community-forensics-int8-test.json).
+Primary aggregate report: [`benchmark/results/modern-evaluation.json`](../benchmark/results/modern-evaluation.json).
 
-Independent stress-test report: [`benchmark/results/frontier-audit.json`](../benchmark/results/frontier-audit.json), with methodology in the [frontier robustness audit](frontier-robustness-audit.md).
+Methodology and caveats: [modern model evaluation](modern-model-evaluation.md).
 
 ## Important limitations
 
-- The 77.6% result is project diagnostic evidence, not the private bounty result.
-- The newer score-blind frontier audit does not clear 75%: it reaches 66.25% on originals, 55.0% on screenshots, 59.5% after standard social JPEG, and 56.5% after heavy recompression.
-- Flux.2 Klein 9B, GPT Image 2, and Nano Banana Pro are material failure modes. The current artifact should not be described as robust across modern generators.
-- The diagnostic test sample was selected deterministically from a bounded 3,000-row prefix of the immutable Defactify test split. Its labels have now been exposed and it must not be used for future tuning.
-- Generator performance is uneven: the report records 43% synthetic recall for SD3, 55% for Midjourney 6, and 60% for SDXL in this sample.
-- Images whose pixels Chrome cannot access are explicitly marked unavailable. CSS backgrounds, canvas/WebGL output, video, protected/authenticated sources, and unusual SVG cases are not guaranteed coverage.
-- A score is an estimate, not forensic proof of authenticity or generation.
-- GitHub main contains a 23 MB model file. Evaluators should clone normally rather than downloading an auto-generated source archive if their network tooling rewrites large binaries.
+- The modern test result is project evidence, not the private bounty score.
+- The test is sample-disjoint. Its six synthetic generator families were absent from training but appeared in validation for calibration, so it is not generator-family-unseen from calibration.
+- The older exposed regression reaches 74.25% on one deterministic social-frame screenshot set, missing the stress target by 0.75 points. Older Adobe Firefly screenshots are the clearest remaining weakness.
+- Heavy recompression reduces modern-test synthetic recall to 82%; GPT Image 2 is the weakest heavy variant at 66%.
+- Images whose pixels Chrome cannot access are marked unavailable. CSS backgrounds, canvas/WebGL, video, protected/authenticated sources, and unusual SVG cases are not guaranteed.
+- A score is a screening estimate, not forensic proof of authenticity or generation.
+- GitHub contains a 23MB model. Clone normally rather than relying on source-archive tooling that may rewrite large binaries.
 
 ## Manual pre-submission check
 
 From a fresh clone, check out the immutable release tag and record its full commit hash:
 
 ```sh
-git checkout synthcheck-bounty-v1
+git checkout synthcheck-bounty-v2
 git rev-parse HEAD
 npm ci
 npm run verify
@@ -51,22 +51,22 @@ Confirm:
 
 1. The model digest matches the value above.
 2. `npm run verify` and `npm run test:chrome` pass.
-3. The repository visibility is public.
-4. The README renders correctly and the MIT license, model provenance, benchmark report, and this readiness report are accessible.
-5. No changes have been made after the verified commit unless the checks are rerun and this report is updated.
+3. The repository is public.
+4. The README, MIT license, provenance, modern evaluation, aggregate report, and this readiness report render correctly.
+5. The submitted tag/commit remains unchanged while maintainers evaluate it.
 
 ## Exact manual claim steps
 
-1. Open the POIDH bounty page while signed into the account that should receive the bounty.
-2. Select the action to submit or create a claim.
-3. Link the public repository: `https://github.com/thedudeb/ai-poidhbot`.
-4. Pin the evaluated revision in the claim: tag `synthcheck-bounty-v1` and the full hash printed by `git rev-parse HEAD`.
-5. State that SynthCheck is a Manifest V3 extension with browser-local WASM inference, bundled checksum-verified MIT weights, and no cloud or localhost service.
-6. Report both development results precisely: **77.6% on the older frozen diagnostic sample, but 66.25% on the independent frontier-original audit and 55.0%–59.5% after degradation; private benchmark not yet evaluated**.
-7. Link the README, model-provenance document, aggregate benchmark report, and this readiness report.
-8. Submit the claim, then preserve the referenced commit unchanged while maintainers build and test it.
-9. If maintainers request fixes, make them in new commits and clearly identify the replacement revision; do not silently rewrite the submitted commit.
+1. Open the POIDH bounty page while signed into the receiving account.
+2. Start a submission or claim.
+3. Link `https://github.com/thedudeb/synthcheck`.
+4. Pin tag `synthcheck-bounty-v2` and the full `git rev-parse HEAD` hash.
+5. State that SynthCheck is Manifest V3 with local WASM inference, bundled checksum-verified weights, and no cloud/localhost service.
+6. Report the four frozen modern-test scores and clearly label them project results, not the private benchmark.
+7. Disclose the exposed legacy screenshot regression at 74.25%.
+8. Link the README, model provenance, modern evaluation, aggregate report, and this readiness report.
+9. Preserve the referenced commit; identify any later replacement revision explicitly.
 
 Suggested concise claim text:
 
-> SynthCheck is an MIT-licensed Chrome Manifest V3 extension for local AI-image likelihood scoring. It bundles a checksum-pinned 22 MB Community Forensics INT8 model and performs all preprocessing and ONNX Runtime Web/WASM inference inside Chrome, with no cloud inference, image upload, external API, or localhost backend. Clean-profile setup/restart/offline Chrome tests pass. The exact artifact scored 77.6% balanced accuracy on our original frozen diagnostic sample, but a later score-blind frontier audit reached 66.25% on originals and 55.0%–59.5% after screenshot/recompression. These are development results, not a claim that the private benchmark has passed. Evaluated revision: include the full commit hash from `git rev-parse HEAD`.
+> SynthCheck is an MIT-licensed Chrome Manifest V3 extension for private, browser-local AI-image likelihood scoring. It bundles a checksum-pinned 23.4MB INT8 Community Forensics ViT-S/16 with a reproducibly trained modern head and performs image preprocessing plus ONNX Runtime Web/WASM inference entirely inside Chrome—no cloud inference, image upload, external API, telemetry, or localhost backend. Clean-profile setup/restart/offline Chrome tests pass. At the fixed displayed 65% threshold, the exact browser artifact scored 92.33% balanced accuracy on 600 frozen sample-disjoint originals, 94.0% on Chrome screenshots, 90.0% after JPEG-75, and 87.33% after heavy double-JPEG recompression. These are project results, not the maintainers' private score. A previously exposed legacy screenshot regression scores 74.25% and is disclosed in the repository. Evaluated revision: tag `synthcheck-bounty-v2`, plus the full commit hash.

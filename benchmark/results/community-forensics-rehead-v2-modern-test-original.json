@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "executedAt": "2026-08-13T18:34:38.756Z",
+  "runtime": {
+    "node": "v24.19.0",
+    "onnxruntimeWeb": "1.22.0",
+    "threads": 1
+  },
+  "model": {
+    "id": "SynthCheck/community-forensics-modern-rehead-v2@20260813:int8-dynamic",
+    "sha256": "d0712f939ef34ab9470eac357e483e188672f472798d4093ddb5d7e5030cd9f4",
+    "bytes": 23433075
+  },
+  "calibration": {
+    "method": "Exact ONNX Runtime Web validation with frozen accuracy, class-recall, and per-generator gates",
+    "path": "benchmark/candidates/community_forensics_rehead_v2/calibration.json",
+    "sha256": "cd886410ed3853debcf69f61650253f3ac56c1143a83548df7c0dcab7220e727",
+    "slope": 1,
+    "intercept": 0.65819564532639
+  },
+  "dataset": {
+    "manifest": "benchmark/data/modern-head/test-manifest.jsonl",
+    "manifestSha256": "cd4d09fbb59d695ebc0cc4dc96f0dd17caea9e0e8865d7658c6100ef723e977f",
+    "split": "test-original",
+    "sampleMethod": "Lowest SHA-256 priority within each pinned source; validation holds out entire generator families; exposed frontier audit names and hashes excluded",
+    "selection": {
+      "schemaVersion": 1,
+      "frozenAt": "2026-08-13",
+      "seed": 20260813,
+      "qwenImageBench": {
+        "dataset": "Qwen/Qwen-Image-Bench",
+        "revision": "d2493deb153b020cf169c7e3f57d15e4dd697038",
+        "license": "Apache-2.0",
+        "trainPerSource": 100,
+        "validationPerSource": 50,
+        "testPerSource": 50,
+        "trainSources": [
+          "FLUX.2-pro",
+          "GPT-Image-1",
+          "GPT-Image-1.5",
+          "Imagen-4.0",
+          "Qwen-Image",
+          "Qwen-Image-2512",
+          "Seedream-4.0",
+          "Seedream-4.5",
+          "nano-banana-pro",
+          "GLM-Image",
+          "HunyuanImage-3.0",
+          "kling_v2_1"
+        ],
+        "validationSources": [
+          "FLUX.2_max",
+          "gpt-image-2",
+          "Imagen-4.0-Ultra",
+          "nano-banana-2.0",
+          "Qwen-Image-2.0-pro",
+          "Seedream-5.0"
+        ]
+      },
+      "openImages": {
+        "dataset": "Open Images V7",
+        "revision": "v7-validation-cvdf",
+        "license": "CC-BY-2.0",
+        "metadataUrl": "https://storage.googleapis.com/openimages/2018_04/validation/validation-images-with-rotation.csv",
+        "imageBaseUrl": "https://open-images-dataset.s3.amazonaws.com/validation",
+        "trainCount": 1200,
+        "validationCount": 300,
+        "testCount": 300
+      },
+      "auditExclusionsManifest": "benchmark/data/frontier-original/manifest.jsonl",
+      "outputDirectory": "benchmark/data/modern-head",
+      "strategy": "Lowest SHA-256 priority within each pinned source; validation holds out entire generator families; exposed frontier audit names and hashes excluded",
+      "counts": {
+        "train": 3600,
+        "validation": 600,
+        "test": 600,
+        "synthetic": 1800,
+        "real": 3000
+      },
+      "docci": {
+        "dataset": "google/docci",
+        "revision": "a0a43eaf34676ffd008fb6565dd8c2ba00d09100",
+        "split": "train",
+        "license": "CC-BY-4.0",
+        "target": 1200,
+        "strategy": "lowest SHA-256 priorities over official train example IDs",
+        "descriptionsSha256": "c9df4819963883af35ddd2cf257949892fd8c6d88b33a012094352df60719800",
+        "archiveBytes": 7592938768,
+        "archiveMd5": "57493de5075fe508d51e77500748f4da"
+      }
+    },
+    "diagnosticSubset": null
+  },
+  "metrics": {
+    "threshold": 0.65,
+    "count": 600,
+    "realCount": 300,
+    "syntheticCount": 300,
+    "trueRealRate": 0.8933333333333333,
+    "trueSyntheticRate": 0.9533333333333334,
+    "balancedAccuracy": 0.9233333333333333,
+    "accuracy": 0.9233333333333333,
+    "bySource": [
+      {
+        "source": "FLUX.2_max",
+        "count": 50,
+        "accuracy": 0.96,
+        "meanAiLikelihood": 0.9542097308892239
+      },
+      {
+        "source": "Imagen-4.0-Ultra",
+        "count": 50,
+        "accuracy": 0.94,
+        "meanAiLikelihood": 0.9299225421241805
+      },
+      {
+        "source": "Qwen-Image-2.0-pro",
+        "count": 50,
+        "accuracy": 1,
+        "meanAiLikelihood": 0.977238149912217
+      },
+      {
+        "source": "Seedream-5.0",
+        "count": 50,
+        "accuracy": 0.96,
+        "meanAiLikelihood": 0.9554821100090026
+      },
+      {
+        "source": "gpt-image-2",
+        "count": 50,
+        "accuracy": 0.94,
+        "meanAiLikelihood": 0.9301518061177706
+      },
+      {
+        "source": "nano-banana-2.0",
+        "count": 50,
+        "accuracy": 0.92,
+        "meanAiLikelihood": 0.9412434856393087
+      },
+      {
+        "source": "open-images",
+        "count": 300,
+        "accuracy": 0.8933333333333333,
+        "meanAiLikelihood": 0.1412219419497591
+      }
+    ]
+  }
+}

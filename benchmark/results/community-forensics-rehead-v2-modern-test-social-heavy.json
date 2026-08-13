@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "executedAt": "2026-08-13T18:38:18.367Z",
+  "runtime": {
+    "node": "v24.19.0",
+    "onnxruntimeWeb": "1.22.0",
+    "threads": 1
+  },
+  "model": {
+    "id": "SynthCheck/community-forensics-modern-rehead-v2@20260813:int8-dynamic",
+    "sha256": "d0712f939ef34ab9470eac357e483e188672f472798d4093ddb5d7e5030cd9f4",
+    "bytes": 23433075
+  },
+  "calibration": {
+    "method": "Exact ONNX Runtime Web validation with frozen accuracy, class-recall, and per-generator gates",
+    "path": "benchmark/candidates/community_forensics_rehead_v2/calibration.json",
+    "sha256": "cd886410ed3853debcf69f61650253f3ac56c1143a83548df7c0dcab7220e727",
+    "slope": 1,
+    "intercept": 0.65819564532639
+  },
+  "dataset": {
+    "manifest": "benchmark/data/modern-test-social-heavy/manifest.jsonl",
+    "manifestSha256": "67784de929852a6a551afc6c01745ae6d5b8fd92e19e2ba4f0c26972625d23a0",
+    "split": "test-social-heavy",
+    "sampleMethod": "OpenFake: first N records in pinned filter order (ascending row index); Qwen and Synthbuster: lowest SHA-256 filename priorities; all strata frozen before inference",
+    "selection": {
+      "schemaVersion": 1,
+      "frozenAt": "2026-08-13",
+      "strategy": "OpenFake: first N records in pinned filter order (ascending row index); Qwen and Synthbuster: lowest SHA-256 filename priorities; all strata frozen before inference",
+      "sourceManifest": "benchmark/data/modern-head/test-manifest.jsonl",
+      "sourceManifestSha256": "cd4d09fbb59d695ebc0cc4dc96f0dd17caea9e0e8865d7658c6100ef723e977f",
+      "variant": "social-heavy",
+      "transform": "Two-pass JPEG recompression: 720px/q50 then 640px/q38, both 4:2:0",
+      "count": 600
+    },
+    "diagnosticSubset": null
+  },
+  "metrics": {
+    "threshold": 0.65,
+    "count": 600,
+    "realCount": 300,
+    "syntheticCount": 300,
+    "trueRealRate": 0.9266666666666666,
+    "trueSyntheticRate": 0.82,
+    "balancedAccuracy": 0.8733333333333333,
+    "accuracy": 0.8733333333333333,
+    "bySource": [
+      {
+        "source": "FLUX.2_max",
+        "count": 50,
+        "accuracy": 0.78,
+        "meanAiLikelihood": 0.8147449625843296
+      },
+      {
+        "source": "Imagen-4.0-Ultra",
+        "count": 50,
+        "accuracy": 0.96,
+        "meanAiLikelihood": 0.935655864104704
+      },
+      {
+        "source": "Qwen-Image-2.0-pro",
+        "count": 50,
+        "accuracy": 0.86,
+        "meanAiLikelihood": 0.8378291425425537
+      },
+      {
+        "source": "Seedream-5.0",
+        "count": 50,
+        "accuracy": 0.86,
+        "meanAiLikelihood": 0.8711532427868798
+      },
+      {
+        "source": "gpt-image-2",
+        "count": 50,
+        "accuracy": 0.66,
+        "meanAiLikelihood": 0.7118776006957589
+      },
+      {
+        "source": "nano-banana-2.0",
+        "count": 50,
+        "accuracy": 0.8,
+        "meanAiLikelihood": 0.8247745549412424
+      },
+      {
+        "source": "open-images",
+        "count": 300,
+        "accuracy": 0.9266666666666666,
+        "meanAiLikelihood": 0.10227882730247038
+      }
+    ]
+  }
+}

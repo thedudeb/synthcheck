@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "method": "Exact ONNX Runtime Web validation with frozen accuracy, class-recall, and per-generator gates",
+  "slope": 1,
+  "intercept": 0.65819564532639,
+  "modelSha256": "d0712f939ef34ab9470eac357e483e188672f472798d4093ddb5d7e5030cd9f4",
+  "rawProbabilityThreshold": 0.49021214132173707,
+  "displayThreshold": 0.65,
+  "gates": {
+    "minimumBalancedAccuracy": 0.75,
+    "minimumRealRecall": 0.85,
+    "minimumSyntheticRecall": 0.7,
+    "minimumPerGeneratorRecall": 0.6
+  },
+  "validation": {
+    "resultPrefix": "community-forensics-rehead-v2-modern-validation",
+    "summaries": {
+      "original": {
+        "sha256": "17d9a9e182a8e26bda1d6e9615305dfb1eba87cdc1f5e9c02fa92f7c7f1eb628",
+        "manifest": "benchmark/data/modern-head/validation-manifest.jsonl",
+        "manifestSha256": "651704a6d3fb86b9324f13bea721c40854535925ce33b49b8749978ee2bed915"
+      },
+      "screenshot": {
+        "sha256": "89fb7c26df73c824f0565edb979c10a16b6434ad4f7b391803122a1e717b8027",
+        "manifest": "benchmark/data/modern-validation-screenshot/manifest.jsonl",
+        "manifestSha256": "4211c8fc4b49313f5a507f799e040b0a97c854f695f4206ceb3bc67a8d0161ca"
+      },
+      "social-q75": {
+        "sha256": "cb199718eb6d3429034f4eba629d67e47a300724dd3eba0be490b100ed12c875",
+        "manifest": "benchmark/data/modern-validation-social-q75/manifest.jsonl",
+        "manifestSha256": "3bc8f43dc61fff3de84500a29a6d9d6ad916460927ec4bdbedd8b82a656e9572"
+      },
+      "social-heavy": {
+        "sha256": "5f3ff6728995eca419efcdcba182f2edc8992118d3d7c465af095b979dbd0591",
+        "manifest": "benchmark/data/modern-validation-social-heavy/manifest.jsonl",
+        "manifestSha256": "65de57dc570bc0b0c1144d9b8d6b149863328192ceae9eac185186567d70dbc5"
+      }
+    },
+    "metrics": {
+      "original": {
+        "balancedAccuracy": 0.895,
+        "realRecall": 0.8566666666666667,
+        "syntheticRecall": 0.9333333333333333,
+        "syntheticRecallBySource": {
+          "FLUX.2_max": 0.88,
+          "Imagen-4.0-Ultra": 0.9,
+          "Qwen-Image-2.0-pro": 0.96,
+          "Seedream-5.0": 0.98,
+          "gpt-image-2": 0.9,
+          "nano-banana-2.0": 0.98
+        }
+      },
+      "screenshot": {
+        "balancedAccuracy": 0.9516666666666667,
+        "realRecall": 0.9366666666666666,
+        "syntheticRecall": 0.9666666666666667,
+        "syntheticRecallBySource": {
+          "FLUX.2_max": 0.98,
+          "Imagen-4.0-Ultra": 0.98,
+          "Qwen-Image-2.0-pro": 0.98,
+          "Seedream-5.0": 0.98,
+          "gpt-image-2": 0.9,
+          "nano-banana-2.0": 0.98
+        }
+      },
+      "social-q75": {
+        "balancedAccuracy": 0.8866666666666667,
+        "realRecall": 0.8766666666666667,
+        "syntheticRecall": 0.8966666666666666,
+        "syntheticRecallBySource": {
+          "FLUX.2_max": 0.86,
+          "Imagen-4.0-Ultra": 0.92,
+          "Qwen-Image-2.0-pro": 0.92,
+          "Seedream-5.0": 0.9,
+          "gpt-image-2": 0.82,
+          "nano-banana-2.0": 0.96
+        }
+      },
+      "social-heavy": {
+        "balancedAccuracy": 0.8683333333333334,
+        "realRecall": 0.9133333333333333,
+        "syntheticRecall": 0.8233333333333334,
+        "syntheticRecallBySource": {
+          "FLUX.2_max": 0.76,
+          "Imagen-4.0-Ultra": 0.9,
+          "Qwen-Image-2.0-pro": 0.8,
+          "Seedream-5.0": 0.9,
+          "gpt-image-2": 0.66,
+          "nano-banana-2.0": 0.92
+        }
+      }
+    }
+  }
+}

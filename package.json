@@ -20,7 +20,11 @@
     "benchmark:run": "tsx benchmark/run.ts",
     "benchmark:frontier:prepare": "tsx benchmark/prepare-frontier-audit.ts",
     "benchmark:frontier:transform": "tsx benchmark/transform-frontier-audit.ts",
-    "benchmark:frontier:summarize": "tsx benchmark/summarize-frontier-audit.ts"
+    "benchmark:frontier:summarize": "tsx benchmark/summarize-frontier-audit.ts",
+    "benchmark:modern:prepare": "tsx benchmark/modern/prepare.ts",
+    "benchmark:modern:prepare:docci": "benchmark/.venv/bin/python benchmark/modern/prepare_docci.py",
+    "benchmark:modern:calibrate": "tsx benchmark/modern/fit_browser_calibration.ts",
+    "benchmark:modern:summarize": "tsx benchmark/summarize-modern-evaluation.ts"
   },
   "dependencies": {
     "onnxruntime-web": "1.22.0"

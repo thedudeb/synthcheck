@@ -22,16 +22,16 @@ export interface ModelSpec {
 }
 
 export const MODEL_SPEC: ModelSpec = {
-  id: "OwensLab/commfor-model-224@26afc31:int8-dynamic",
-  displayName: "Community Forensics ViT-S/16 (INT8)",
-  sourceRepository: "https://github.com/thedudeb/ai-poidhbot",
-  sourceRevision: "e1bee3967163cf1791af145d68778d008e95c5f7",
+  id: "SynthCheck/community-forensics-modern-rehead-v2@20260813:int8-dynamic",
+  displayName: "SynthCheck Modern Forensics ViT-S/16 (INT8)",
+  sourceRepository: "https://github.com/thedudeb/synthcheck",
+  sourceRevision: "main",
   upstreamRepository: "https://huggingface.co/OwensLab/commfor-model-224",
   upstreamRevision: "26afc31e6b40c312c3fd42c05a758be62446215b",
   weightsUrl:
-    "https://raw.githubusercontent.com/thedudeb/ai-poidhbot/e1bee3967163cf1791af145d68778d008e95c5f7/weights/community-forensics-int8.onnx",
+    "https://raw.githubusercontent.com/thedudeb/synthcheck/main/weights/community-forensics-int8.onnx",
   bundledWeightsPath: "weights/community-forensics-int8.onnx",
-  weightsSha256: "9c7a92aafb3a5c14b1626a4cb10a241205254620c6d4a6cc60ca91c15533fc20",
+  weightsSha256: "d0712f939ef34ab9470eac357e483e188672f472798d4093ddb5d7e5030cd9f4",
   weightsBytes: 23_433_075,
   license: "MIT",
   inputSize: 224,
@@ -40,7 +40,7 @@ export const MODEL_SPEC: ModelSpec = {
   outputName: "logits",
   syntheticLabelIndex: 0,
   singleLogit: true,
-  calibration: { slope: 1, intercept: 3.563478187572664 },
+  calibration: { slope: 1, intercept: 0.65819564532639 },
   imageMean: [0.485, 0.456, 0.406],
   imageStd: [0.229, 0.224, 0.225],
 };

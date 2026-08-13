@@ -16,6 +16,6 @@ describe("pinned detector model", () => {
     expect(MODEL_SPEC.imageStd).toEqual([0.229, 0.224, 0.225]);
     expect(MODEL_SPEC.inputSize).toBe(224);
     expect(MODEL_SPEC.resizeShortEdge).toBe(256);
-    expect(MODEL_SPEC.calibration).toEqual({ slope: 1, intercept: 3.563478187572664 });
+    expect(MODEL_SPEC.calibration).toEqual({ slope: 1, intercept: 0.65819564532639 });
   });
 });

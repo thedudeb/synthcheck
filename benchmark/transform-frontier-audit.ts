@@ -8,8 +8,16 @@ import type { BenchmarkItem } from "./types";
 
 type Variant = "screenshot" | "social-q75" | "social-heavy";
 
-const sourceDirectory = path.resolve("benchmark/data/frontier-original");
-const sourceManifestText = await readFile(path.join(sourceDirectory, "manifest.jsonl"), "utf8");
+function argument(name: string, fallback: string): string {
+  const index = process.argv.indexOf(`--${name}`);
+  return index >= 0 && process.argv[index + 1] ? process.argv[index + 1]! : fallback;
+}
+
+const sourceDirectory = path.resolve(argument("source-dir", "benchmark/data/frontier-original"));
+const sourceManifestName = argument("source-manifest", "manifest.jsonl");
+const outputPrefix = path.resolve(argument("output-prefix", "benchmark/data/frontier"));
+const sourceManifestPath = path.resolve(sourceDirectory, sourceManifestName);
+const sourceManifestText = await readFile(sourceManifestPath, "utf8");
 const sourceManifest = sourceManifestText.trim().split("\n").map((line) => JSON.parse(line) as BenchmarkItem);
 const requested = process.argv.includes("--variant")
   ? process.argv[process.argv.indexOf("--variant") + 1]
@@ -99,7 +107,7 @@ try {
     });
   }
   for (const variant of variants) {
-    const outputDirectory = path.resolve(`benchmark/data/frontier-${variant}`);
+    const outputDirectory = `${outputPrefix}-${variant}`;
     const page = variant === "screenshot" ? await browser!.newPage({ viewport: { width: 1170, height: 1400 } }) : undefined;
     const manifest: BenchmarkItem[] = [];
     await mkdir(path.join(outputDirectory, "images"), { recursive: true });
@@ -132,7 +140,7 @@ try {
         schemaVersion: 1,
         frozenAt: FRONTIER_AUDIT.frozenAt,
         strategy: FRONTIER_AUDIT.sampleStrategy,
-        sourceManifest: "benchmark/data/frontier-original/manifest.jsonl",
+        sourceManifest: path.relative(process.cwd(), sourceManifestPath),
         sourceManifestSha256: sha256(sourceManifestText),
         variant,
         transform: description(variant),

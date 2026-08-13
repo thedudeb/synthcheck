@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "seed": 20260813,
+  "upstreamWeightsSha256": "a6cc439d5a6d2dfadd60c77d27a2838ad55b34e601ecd30f46ad97266d6ac4e0",
+  "trainManifestSha256": "65591d84245f292f3649dfcb8752b2946ccab7fbb3b26b66ce5e6a4a4a51038e",
+  "validationManifestSha256": "651704a6d3fb86b9324f13bea721c40854535925ce33b49b8749978ee2bed915",
+  "trainImages": 3600,
+  "validationImages": 600,
+  "validationViewsPerImage": 4,
+  "thresholdLogit": -1.7403165590763088,
+  "variantBalancedAccuracy": {
+    "original": 0.8983333333333333,
+    "screenshot": 0.9733333333333334,
+    "social-q75": 0.8933333333333333,
+    "social-heavy": 0.885
+  },
+  "minimumVariantBalancedAccuracy": 0.885,
+  "meanVariantBalancedAccuracy": 0.9125,
+  "realRecall": 0.87,
+  "syntheticRecallByHeldOutSource": {
+    "FLUX.2_max": 0.945,
+    "Imagen-4.0-Ultra": 0.955,
+    "Qwen-Image-2.0-pro": 0.945,
+    "Seedream-5.0": 0.975,
+    "gpt-image-2": 0.94,
+    "nano-banana-2.0": 0.97
+  },
+  "balancedAccuracyBySourceWhenBothLabelsExist": {},
+  "model": {
+    "fp32Bytes": 86805094,
+    "int8Bytes": 23433075,
+    "int8Sha256": "d0712f939ef34ab9470eac357e483e188672f472798d4093ddb5d7e5030cd9f4",
+    "onnxMaxAbsError": 1.1444091796875e-05
+  }
+}

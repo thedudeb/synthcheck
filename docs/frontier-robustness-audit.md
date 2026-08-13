@@ -1,14 +1,27 @@
-# Frontier-generator robustness audit
+# Frontier-generator robustness audit and exposed regression
 
 ## Outcome
 
-The frozen SynthCheck release model does **not** clear the bounty's 75.0% balanced-accuracy target on this newer, independently sourced audit. It reaches **66.25%** on original images and **55.0%–59.5%** after screenshot or social-media-style transformations.
+The former frozen SynthCheck model did **not** clear the bounty's 75.0% target on this independently sourced audit. It reached **66.25%** on originals and **55.0%–59.5%** after screenshot or social-media transformations. Those score-blind results exposed the modern-generator gap that blocked the first submission candidate.
 
-This is a deliberately candid stress test, not a replacement for the maintainers' private evaluation. The result confirms the browser-local implementation while exposing a material generalization gap on recent generators.
+The set is now exposed. Shipping v2 is re-run on it only as transparent regression evidence; the separate [modern model evaluation](modern-model-evaluation.md) provides v2's score-blind test.
+
+## Shipping v2 regression
+
+V2's model and calibration were frozen on the separate modern validation corpus. However, the original audit findings informed subsequent engineering priorities, so the following results are not independent and were not used to recalibrate v2.
+
+| Variant | Balanced accuracy | Real recall | Synthetic recall |
+| --- | ---: | ---: | ---: |
+| Original | 84.50% | 89.00% | 80.00% |
+| Chrome screenshot | 74.25% | 94.00% | 54.50% |
+| Social JPEG q75 | 82.50% | 89.50% | 75.50% |
+| Heavy double JPEG | 76.75% | 93.50% | 60.00% |
+
+The regression improves originals by 18.25 points and the JPEG variants by 20.25–22.25 points. Its screenshot result remains 0.75 points below the stress target, mostly because the older Adobe Firefly screenshots are frequently missed. This limitation is retained in the submission report.
 
 ## Frozen protocol
 
-- The exact shipping INT8 model, SHA-256 `9c7a92aafb3a5c14b1626a4cb10a241205254620c6d4a6cc60ca91c15533fc20`, was used unchanged.
+- The exact former shipping INT8 model, SHA-256 `9c7a92aafb3a5c14b1626a4cb10a241205254620c6d4a6cc60ca91c15533fc20`, was used unchanged for the original score-blind audit.
 - Calibration remained slope `1`, intercept `3.563478187572664`; the displayed decision threshold remained `0.65`.
 - Source membership and transformations were frozen before the first inference result was inspected.
 - No model, calibration, threshold, or sample was changed after scores were visible.
@@ -57,7 +70,7 @@ Recompression makes the detector more conservative: it rejects fewer authentic i
 | Imagen 4 | 90.3% | 90.3% | 38.7% | 19.4% |
 | Nano Banana Pro | 31.6% | 42.1% | 36.8% | 26.3% |
 
-The strongest original-source results are Imagen 4 and the older Firefly subset. Flux.2, GPT Image 2, and Nano Banana Pro are the clearest release blockers for a robust modern detector.
+For the former model, the strongest original-source results were Imagen 4 and the older Firefly subset; Flux.2, GPT Image 2, and Nano Banana Pro were the clearest release blockers.
 
 ## Reproduce
 
@@ -79,7 +92,7 @@ The primary machine-readable report is [`benchmark/results/frontier-audit.json`]
 ## Limitations
 
 - OpenFake focuses on politically and socially salient images; the result is not an estimate for every browsing domain.
-- This audit was not used to train or tune SynthCheck. However, complete non-overlap with the upstream Community Forensics training corpus cannot be proven for older Firefly or real-image sources.
+- The original baseline audit was score-blind, but its exposed findings later informed v2 engineering priorities. V2's re-run must therefore be interpreted only as regression evidence. Complete non-overlap with the upstream Community Forensics corpus also cannot be proven for older Firefly or real-image sources.
 - Only 19 Nano Banana Pro records existed in the pinned OpenFake test split, so the 50-image Google-family stratum adds 31 Imagen 4 images from Qwen Image Bench.
 - Synthbuster's Firefly images are from its 2023 release and do not represent every later Firefly model.
 - The screenshot is one deterministic Chrome/social-frame simulation, not every platform, crop, display density, or device.

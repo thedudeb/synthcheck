@@ -2,9 +2,14 @@ import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { AI_THRESHOLD } from "../src/shared/contracts";
-import { MODEL_SPEC } from "../src/shared/model-spec";
 import type { BenchmarkMetrics } from "./metrics";
 import { FRONTIER_AUDIT } from "./frontier-config";
+
+const AUDITED_MODEL = {
+  id: "OwensLab/commfor-model-224@26afc31:int8-dynamic",
+  sha256: "9c7a92aafb3a5c14b1626a4cb10a241205254620c6d4a6cc60ca91c15533fc20",
+  calibration: { slope: 1, intercept: 3.563478187572664 },
+} as const;
 
 interface RunSummary {
   executedAt: string;
@@ -22,9 +27,9 @@ const summaries = await Promise.all(variants.map(async (variant) => {
 }));
 
 for (const summary of summaries) {
-  if (summary.run.model.sha256 !== MODEL_SPEC.weightsSha256) throw new Error(`${summary.variant} used the wrong model`);
+  if (summary.run.model.sha256 !== AUDITED_MODEL.sha256) throw new Error(`${summary.variant} used the wrong model`);
   if (summary.run.metrics.threshold !== AI_THRESHOLD) throw new Error(`${summary.variant} used the wrong threshold`);
-  if (!summary.run.calibration || summary.run.calibration.slope !== MODEL_SPEC.calibration.slope || summary.run.calibration.intercept !== MODEL_SPEC.calibration.intercept) {
+  if (!summary.run.calibration || summary.run.calibration.slope !== AUDITED_MODEL.calibration.slope || summary.run.calibration.intercept !== AUDITED_MODEL.calibration.intercept) {
     throw new Error(`${summary.variant} used the wrong calibration`);
   }
 }
@@ -36,10 +41,10 @@ const report = {
   auditFrozenAt: FRONTIER_AUDIT.frozenAt,
   scoreBlindSelection: true,
   model: {
-    id: MODEL_SPEC.id,
-    sha256: MODEL_SPEC.weightsSha256,
+    id: AUDITED_MODEL.id,
+    sha256: AUDITED_MODEL.sha256,
     threshold: AI_THRESHOLD,
-    calibration: MODEL_SPEC.calibration,
+    calibration: AUDITED_MODEL.calibration,
     frozenBeforeAudit: true,
   },
   sources: {

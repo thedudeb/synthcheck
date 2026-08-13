@@ -4,12 +4,12 @@
 
 SynthCheck is an MIT-licensed Chrome extension that estimates whether images on ordinary webpages are AI-generated. Image decoding, preprocessing, and ONNX inference run inside Chrome; pixels and image-derived features are never uploaded to an inference service.
 
-> **Submission status:** the exact 22 MB browser artifact scores **77.6% balanced accuracy** on the original frozen 1,000-image diagnostic sample, but a newer independent frontier-generator audit reaches only **66.25%** on originals and **55.0%–59.5%** after screenshot/recompression. The privacy/offline implementation is ready; modern-generator accuracy remains a material risk, and only the maintainers' private benchmark can determine whether a claim qualifies.
+> **Submission status:** the exact 23.4 MB browser artifact clears the 75% target on a score-blind, sample-disjoint 600-image modern test: **92.33%** on originals, **94.0%** on Chrome screenshots, **90.0%** after JPEG-75, and **87.33%** after heavy double-JPEG recompression. The privacy/offline implementation is ready. These are project results—not the maintainers' private benchmark—and do not guarantee that a bounty claim qualifies.
 
 ## Capabilities
 
 - Native Manifest V3 extension using a service worker and durable offscreen inference document.
-- Checksum-verified, MIT-licensed Community Forensics ViT-S/16 weights bundled with the extension; no model network request is required.
+- Checksum-verified, MIT-licensed Community Forensics ViT-S/16 backbone with SynthCheck's modern, degradation-trained classifier head, bundled with the extension; no model network request is required.
 - Automatic viewport-prioritized analysis of eligible `<img>` elements, including lazy and dynamically added images.
 - An AI-likelihood score on every successful analysis, with scores at or above 65% flagged as likely AI-generated.
 - Explicit unavailable states, duplicate-result caching, per-site pause, label visibility, and page re-scan controls.
@@ -61,9 +61,9 @@ npm run test:chrome
 
 The Chrome test prepares and verifies the bundled model, restarts the browser, disables networking, analyzes an embedded image, and requires a numeric result label.
 
-Benchmark preparation and reproduction instructions are in [benchmark/README.md](benchmark/README.md). The checked-in [quantized diagnostic report](benchmark/results/community-forensics-int8-test.json) records the model, calibration, dataset manifest, runtime, threshold, and source-level metrics.
+Benchmark preparation and reproduction instructions are in [benchmark/README.md](benchmark/README.md). The checked-in [modern evaluation report](benchmark/results/modern-evaluation.json) records the exact model, calibration, manifests, runtimes, threshold, class recalls, and source-level metrics.
 
-The separate [frontier robustness audit](docs/frontier-robustness-audit.md) tests Flux.2, GPT Image 1.5/2, Imagen 4, Nano Banana Pro, Adobe Firefly, Chrome screenshots, and two levels of social-media-style recompression without tuning the shipping model.
+The [modern model evaluation](docs/modern-model-evaluation.md) covers Flux.2 Max, GPT Image 2, Imagen 4 Ultra, Nano Banana 2, Qwen Image 2 Pro, Seedream 5, Chrome screenshots, and two levels of social-media-style recompression. The older [frontier robustness audit](docs/frontier-robustness-audit.md) remains as an exposed regression set covering additional sources such as Adobe Firefly.
 
 For evidence, known limitations, and the manual POIDH claim procedure, see the [submission-readiness report](docs/submission-readiness.md).
 
@@ -79,7 +79,8 @@ For evidence, known limitations, and the manual POIDH claim procedure, see the [
 
 - Cross-origin policy, authenticated URLs, canvas/WebGL content, CSS backgrounds, SVG edge cases, and video frames can prevent access to pixels; the UI reports unavailable analyses rather than inventing scores.
 - Very small images under 64×64 are excluded as non-content UI assets.
-- Detection quality varies sharply by generator and transformation. The independent frontier audit is especially weak on Flux.2, GPT Image 2, and Nano Banana Pro; recompression further reduces synthetic recall.
+- Detection quality still varies by generator and transformation. Heavy recompression reduces synthetic recall to 82% on the modern test; GPT Image 2 is the weakest heavy-compression stratum at 66%.
+- The previously exposed legacy audit scores 74.25% on its single social-frame screenshot transform, 0.75 percentage points below the project stress target. That regression is not presented as independent evidence.
 
 ## License
 

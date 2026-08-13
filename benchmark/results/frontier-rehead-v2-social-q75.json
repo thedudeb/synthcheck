@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "executedAt": "2026-08-13T18:40:20.220Z",
+  "runtime": {
+    "node": "v24.19.0",
+    "onnxruntimeWeb": "1.22.0",
+    "threads": 1
+  },
+  "model": {
+    "id": "SynthCheck/community-forensics-modern-rehead-v2@20260813:int8-dynamic",
+    "sha256": "d0712f939ef34ab9470eac357e483e188672f472798d4093ddb5d7e5030cd9f4",
+    "bytes": 23433075
+  },
+  "calibration": {
+    "method": "Exact ONNX Runtime Web validation with frozen accuracy, class-recall, and per-generator gates",
+    "path": "benchmark/candidates/community_forensics_rehead_v2/calibration.json",
+    "sha256": "cd886410ed3853debcf69f61650253f3ac56c1143a83548df7c0dcab7220e727",
+    "slope": 1,
+    "intercept": 0.65819564532639
+  },
+  "dataset": {
+    "manifest": "benchmark/data/frontier-social-q75/manifest.jsonl",
+    "manifestSha256": "93436ef3092adb276f8e9366dc454f1a02d71bc33e1b61335fa475fdee89bf2f",
+    "split": "social-q75",
+    "sampleMethod": "lowest SHA-256 priorities within the scanned row universe, stratified by source",
+    "selection": {
+      "schemaVersion": 1,
+      "frozenAt": "2026-08-13",
+      "sourceManifest": "benchmark/data/frontier-original/manifest.jsonl",
+      "sourceManifestSha256": "976bb72cb0023107468084a3b60e00e5b5c08738b4905333187dd24c0f823679",
+      "variant": "social-q75",
+      "transform": "Long edge capped at 1080px and JPEG quality 75 with 4:2:0 chroma subsampling",
+      "count": 400
+    },
+    "diagnosticSubset": null
+  },
+  "metrics": {
+    "threshold": 0.65,
+    "count": 400,
+    "realCount": 200,
+    "syntheticCount": 200,
+    "trueRealRate": 0.895,
+    "trueSyntheticRate": 0.755,
+    "balancedAccuracy": 0.825,
+    "accuracy": 0.825,
+    "bySource": [
+      {
+        "source": "adobe-firefly",
+        "count": 50,
+        "accuracy": 0.54,
+        "meanAiLikelihood": 0.5946486304978041
+      },
+      {
+        "source": "docci",
+        "count": 100,
+        "accuracy": 0.91,
+        "meanAiLikelihood": 0.12073536293026638
+      },
+      {
+        "source": "flux.2-klein-9b",
+        "count": 50,
+        "accuracy": 0.64,
+        "meanAiLikelihood": 0.6490657552209868
+      },
+      {
+        "source": "gpt-image-1.5",
+        "count": 25,
+        "accuracy": 0.96,
+        "meanAiLikelihood": 0.9293574753208671
+      },
+      {
+        "source": "gpt-image-2",
+        "count": 25,
+        "accuracy": 1,
+        "meanAiLikelihood": 0.9689911887078552
+      },
+      {
+        "source": "imagen-4.0",
+        "count": 31,
+        "accuracy": 0.9032258064516129,
+        "meanAiLikelihood": 0.9400336549969694
+      },
+      {
+        "source": "imagenet",
+        "count": 100,
+        "accuracy": 0.88,
+        "meanAiLikelihood": 0.14912115615919114
+      },
+      {
+        "source": "nano-banana-pro",
+        "count": 19,
+        "accuracy": 0.7894736842105263,
+        "meanAiLikelihood": 0.7987212337622814
+      }
+    ]
+  }
+}

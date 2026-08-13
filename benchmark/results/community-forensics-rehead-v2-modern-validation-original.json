@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "executedAt": "2026-08-13T18:29:09.572Z",
+  "runtime": {
+    "node": "v24.19.0",
+    "onnxruntimeWeb": "1.22.0",
+    "threads": 1
+  },
+  "model": {
+    "id": "SynthCheck/community-forensics-modern-rehead-v2@20260813:int8-dynamic",
+    "sha256": "d0712f939ef34ab9470eac357e483e188672f472798d4093ddb5d7e5030cd9f4",
+    "bytes": 23433075
+  },
+  "calibration": null,
+  "dataset": {
+    "manifest": "benchmark/data/modern-head/validation-manifest.jsonl",
+    "manifestSha256": "651704a6d3fb86b9324f13bea721c40854535925ce33b49b8749978ee2bed915",
+    "split": "original",
+    "sampleMethod": "Lowest SHA-256 priority within each pinned source; validation holds out entire generator families; exposed frontier audit names and hashes excluded",
+    "selection": {
+      "schemaVersion": 1,
+      "frozenAt": "2026-08-13",
+      "seed": 20260813,
+      "qwenImageBench": {
+        "dataset": "Qwen/Qwen-Image-Bench",
+        "revision": "d2493deb153b020cf169c7e3f57d15e4dd697038",
+        "license": "Apache-2.0",
+        "trainPerSource": 100,
+        "validationPerSource": 50,
+        "trainSources": [
+          "FLUX.2-pro",
+          "GPT-Image-1",
+          "GPT-Image-1.5",
+          "Imagen-4.0",
+          "Qwen-Image",
+          "Qwen-Image-2512",
+          "Seedream-4.0",
+          "Seedream-4.5",
+          "nano-banana-pro",
+          "GLM-Image",
+          "HunyuanImage-3.0",
+          "kling_v2_1"
+        ],
+        "validationSources": [
+          "FLUX.2_max",
+          "gpt-image-2",
+          "Imagen-4.0-Ultra",
+          "nano-banana-2.0",
+          "Qwen-Image-2.0-pro",
+          "Seedream-5.0"
+        ]
+      },
+      "openImages": {
+        "dataset": "Open Images V7",
+        "revision": "v7-validation-cvdf",
+        "license": "CC-BY-2.0",
+        "metadataUrl": "https://storage.googleapis.com/openimages/2018_04/validation/validation-images-with-rotation.csv",
+        "imageBaseUrl": "https://open-images-dataset.s3.amazonaws.com/validation",
+        "trainCount": 1200,
+        "validationCount": 300
+      },
+      "auditExclusionsManifest": "benchmark/data/frontier-original/manifest.jsonl",
+      "outputDirectory": "benchmark/data/modern-head",
+      "strategy": "Lowest SHA-256 priority within each pinned source; validation holds out entire generator families; exposed frontier audit names and hashes excluded",
+      "counts": {
+        "train": 3600,
+        "validation": 600,
+        "synthetic": 1500,
+        "real": 2700
+      },
+      "docci": {
+        "dataset": "google/docci",
+        "revision": "a0a43eaf34676ffd008fb6565dd8c2ba00d09100",
+        "split": "train",
+        "license": "CC-BY-4.0",
+        "target": 1200,
+        "strategy": "lowest SHA-256 priorities over official train example IDs",
+        "descriptionsSha256": "c9df4819963883af35ddd2cf257949892fd8c6d88b33a012094352df60719800",
+        "archiveBytes": 7592938768,
+        "archiveMd5": "57493de5075fe508d51e77500748f4da"
+      }
+    },
+    "diagnosticSubset": null
+  },
+  "metrics": {
+    "threshold": 0.65,
+    "count": 600,
+    "realCount": 300,
+    "syntheticCount": 300,
+    "trueRealRate": 0.8766666666666667,
+    "trueSyntheticRate": 0.9133333333333333,
+    "balancedAccuracy": 0.895,
+    "accuracy": 0.895,
+    "bySource": [
+      {
+        "source": "FLUX.2_max",
+        "count": 50,
+        "accuracy": 0.84,
+        "meanAiLikelihood": 0.8738129606947073
+      },
+      {
+        "source": "Imagen-4.0-Ultra",
+        "count": 50,
+        "accuracy": 0.9,
+        "meanAiLikelihood": 0.9299596156612064
+      },
+      {
+        "source": "Qwen-Image-2.0-pro",
+        "count": 50,
+        "accuracy": 0.94,
+        "meanAiLikelihood": 0.9355816265987648
+      },
+      {
+        "source": "Seedream-5.0",
+        "count": 50,
+        "accuracy": 0.94,
+        "meanAiLikelihood": 0.9469566003081689
+      },
+      {
+        "source": "gpt-image-2",
+        "count": 50,
+        "accuracy": 0.88,
+        "meanAiLikelihood": 0.8697168718802493
+      },
+      {
+        "source": "nano-banana-2.0",
+        "count": 50,
+        "accuracy": 0.98,
+        "meanAiLikelihood": 0.9670683493509894
+      },
+      {
+        "source": "open-images",
+        "count": 300,
+        "accuracy": 0.8766666666666667,
+        "meanAiLikelihood": 0.15268355685322438
+      }
+    ]
+  }
+}

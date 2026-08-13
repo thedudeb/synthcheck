@@ -23,11 +23,41 @@ function sha256(bytes: Uint8Array | string): string {
 const split = argument("split", "validation");
 const candidate = argument("candidate", "baseline");
 const datasetDirectory = path.resolve(argument("dataset-dir", `benchmark/data/defactify-${split}`));
-const manifestPath = path.join(datasetDirectory, "manifest.jsonl");
-const selectionPath = path.join(datasetDirectory, "selection.json");
+const manifestPath = path.resolve(datasetDirectory, argument("manifest", "manifest.jsonl"));
+const selectionPath = path.resolve(datasetDirectory, argument("selection", "selection.json"));
 const resultName = argument("result-name", `${candidate}-${split}`);
 if (!/^[a-z0-9][a-z0-9._-]*$/i.test(resultName)) throw new Error(`Invalid result name: ${resultName}`);
-const candidateSpec = candidate === "community-forensics" || candidate === "community-forensics-int8"
+const candidateSpec = candidate === "community-forensics-rehead-v2-int8"
+  ? {
+      id: "SynthCheck/community-forensics-modern-rehead-v2@20260813:int8-dynamic",
+      defaultPath: "benchmark/candidates/community_forensics_rehead_v2/model-int8.onnx",
+      expectedHash: "d0712f939ef34ab9470eac357e483e188672f472798d4093ddb5d7e5030cd9f4",
+      inputSize: 224,
+      resizeShortEdge: 256,
+      centerCropOnly: false,
+      mean: [0.485, 0.456, 0.406] as const,
+      std: [0.229, 0.224, 0.225] as const,
+      syntheticLabelIndex: 0,
+      singleLogit: true,
+      outputName: "logits",
+      patchGrid: undefined,
+    }
+  : candidate === "community-forensics-rehead-int8"
+  ? {
+      id: "SynthCheck/community-forensics-modern-rehead@20260813:int8-dynamic",
+      defaultPath: "benchmark/candidates/community_forensics_rehead/model-int8.onnx",
+      expectedHash: "5de0536c262a4d261b0c23d880b8b74ddf96736dd745c4bf30f3db8a14ddb6f3",
+      inputSize: 224,
+      resizeShortEdge: 256,
+      centerCropOnly: false,
+      mean: [0.485, 0.456, 0.406] as const,
+      std: [0.229, 0.224, 0.225] as const,
+      syntheticLabelIndex: 0,
+      singleLogit: true,
+      outputName: "logits",
+      patchGrid: undefined,
+    }
+  : candidate === "community-forensics" || candidate === "community-forensics-int8"
   ? {
       id: candidate === "community-forensics-int8"
         ? "OwensLab/commfor-model-224@26afc31:int8-dynamic"
@@ -128,10 +158,11 @@ const candidateSpec = candidate === "community-forensics" || candidate === "comm
       outputName: MODEL_SPEC.outputName,
       patchGrid: undefined,
     };
-if (!["baseline", "xrayon", "xrayon-int8", "ferretnet", "safe", "polimi", "community-forensics", "community-forensics-int8"].includes(candidate)) {
+if (!["baseline", "xrayon", "xrayon-int8", "ferretnet", "safe", "polimi", "community-forensics", "community-forensics-int8", "community-forensics-rehead-int8", "community-forensics-rehead-v2-int8"].includes(candidate)) {
   throw new Error(`Unknown candidate: ${candidate}`);
 }
 const modelPath = path.resolve(argument("model", candidateSpec.defaultPath));
+const expectedModelHash = argument("expected-hash", candidateSpec.expectedHash);
 const calibrationArgument = argument("calibration", "none");
 const calibrationPath = calibrationArgument === "none" ? undefined : path.resolve(calibrationArgument);
 const calibrationText = calibrationPath ? await readFile(calibrationPath, "utf8") : undefined;
@@ -165,7 +196,7 @@ if (realLimit > 0 || perGeneratorLimit > 0) {
 }
 const modelBytes = await readFile(modelPath);
 const modelHash = sha256(modelBytes);
-if (modelHash !== candidateSpec.expectedHash) throw new Error(`Unexpected model SHA-256 ${modelHash}`);
+if (modelHash !== expectedModelHash) throw new Error(`Unexpected model SHA-256 ${modelHash}`);
 if (calibration?.modelSha256 && calibration.modelSha256 !== modelHash) {
   throw new Error(`Calibration targets model ${calibration.modelSha256}, not ${modelHash}`);
 }

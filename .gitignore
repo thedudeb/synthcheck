@@ -7,6 +7,7 @@ benchmark/models/
 benchmark/candidates/*/*.pth
 benchmark/candidates/*/*.safetensors
 benchmark/candidates/*/*.onnx
+benchmark/candidates/*/*.npz
 benchmark/.venv/
 **/__pycache__/
 benchmark/results/*-predictions.jsonl
