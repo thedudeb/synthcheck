@@ -12,7 +12,7 @@
     "bytes": 23433075
   },
   "calibration": {
-    "method": "Platt scaling over raw probability logits",
+    "method": "Monotonic log-odds intercept calibration",
     "path": "benchmark/candidates/community_forensics/calibration-int8.json",
     "sha256": "90244355dd4a6000d13f5f9bcc27350ce32707c3714b49b26daa4f3377749abb",
     "slope": 1,
@@ -22,7 +22,7 @@
     "manifest": "benchmark/data/defactify-test/manifest.jsonl",
     "manifestSha256": "0fe74289bde79e8478cb68e141a1658254a8b65d6135dda6a602dd4edabb5022",
     "split": "test",
-    "sampleMethod": "lowest SHA-256 priorities over immutable dataset row identities, stratified by source",
+    "sampleMethod": "lowest SHA-256 priorities within the scanned row universe, stratified by source",
     "diagnosticSubset": null
   },
   "metrics": {

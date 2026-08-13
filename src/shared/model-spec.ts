@@ -3,34 +3,44 @@ export interface ModelSpec {
   displayName: string;
   sourceRepository: string;
   sourceRevision: string;
+  upstreamRepository: string;
+  upstreamRevision: string;
   weightsUrl: string;
+  bundledWeightsPath: string;
   weightsSha256: string;
   weightsBytes: number;
   license: string;
   inputSize: number;
+  resizeShortEdge: number;
   inputName: string;
   outputName: string;
   syntheticLabelIndex: number;
+  singleLogit: boolean;
+  calibration: { slope: number; intercept: number };
   imageMean: readonly [number, number, number];
   imageStd: readonly [number, number, number];
 }
 
-// Browser-ready baseline. It remains replaceable until held-out validation proves
-// the final detector clears the PRD's balanced-accuracy gate.
 export const MODEL_SPEC: ModelSpec = {
-  id: "onnx-community/ai-image-detection-ONNX@e3cfe99:model-q4",
-  displayName: "AI Image Detection ViT (Q4 baseline)",
-  sourceRepository: "https://huggingface.co/onnx-community/ai-image-detection-ONNX",
-  sourceRevision: "e3cfe99f2841930a040a6281682c10c989965603",
+  id: "OwensLab/commfor-model-224@26afc31:int8-dynamic",
+  displayName: "Community Forensics ViT-S/16 (INT8)",
+  sourceRepository: "https://github.com/thedudeb/ai-poidhbot",
+  sourceRevision: "e1bee3967163cf1791af145d68778d008e95c5f7",
+  upstreamRepository: "https://huggingface.co/OwensLab/commfor-model-224",
+  upstreamRevision: "26afc31e6b40c312c3fd42c05a758be62446215b",
   weightsUrl:
-    "https://huggingface.co/onnx-community/ai-image-detection-ONNX/resolve/e3cfe99f2841930a040a6281682c10c989965603/onnx/model_q4.onnx",
-  weightsSha256: "28c7f06d5aa87bc7e023c023eab1fbf473deef54e9c62f9838a99e50422810ec",
-  weightsBytes: 56_757_898,
-  license: "Apache-2.0",
+    "https://raw.githubusercontent.com/thedudeb/ai-poidhbot/e1bee3967163cf1791af145d68778d008e95c5f7/weights/community-forensics-int8.onnx",
+  bundledWeightsPath: "weights/community-forensics-int8.onnx",
+  weightsSha256: "9c7a92aafb3a5c14b1626a4cb10a241205254620c6d4a6cc60ca91c15533fc20",
+  weightsBytes: 23_433_075,
+  license: "MIT",
   inputSize: 224,
+  resizeShortEdge: 256,
   inputName: "pixel_values",
   outputName: "logits",
-  syntheticLabelIndex: 1,
-  imageMean: [0.5, 0.5, 0.5],
-  imageStd: [0.5, 0.5, 0.5],
+  syntheticLabelIndex: 0,
+  singleLogit: true,
+  calibration: { slope: 1, intercept: 3.563478187572664 },
+  imageMean: [0.485, 0.456, 0.406],
+  imageStd: [0.229, 0.224, 0.225],
 };

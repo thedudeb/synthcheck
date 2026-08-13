@@ -3,7 +3,8 @@ import { AI_THRESHOLD, type InferenceResult, type InferenceSource, type ModelSta
 import { sha256Hex } from "../shared/hash";
 import { MODEL_SPEC } from "../shared/model-spec";
 import { readStoredModel, storeModel } from "../shared/storage";
-import { imageDataToNormalizedChw, softmaxSynthetic } from "./preprocess";
+import { calibrateAiLikelihood } from "./calibration";
+import { centerCropGeometry, imageDataToNormalizedChw, sigmoidLogit, softmaxSynthetic } from "./preprocess";
 
 interface SetupProgress {
   downloadedBytes: number;
@@ -60,8 +61,11 @@ export class BrowserDetector {
     };
 
     try {
-      const response = await fetch(MODEL_SPEC.weightsUrl, { cache: "no-store", credentials: "omit" });
-      if (!response.ok || !response.body) throw new Error(`Model download failed with HTTP ${response.status}`);
+      const response = await fetch(chrome.runtime.getURL(MODEL_SPEC.bundledWeightsPath), {
+        cache: "no-store",
+        credentials: "omit",
+      });
+      if (!response.ok || !response.body) throw new Error(`Bundled model load failed with HTTP ${response.status}`);
       const advertisedLength = Number(response.headers.get("content-length")) || MODEL_SPEC.weightsBytes;
       const reader = response.body.getReader();
       const chunks: Uint8Array[] = [];
@@ -124,8 +128,20 @@ export class BrowserDetector {
       canvas.height = MODEL_SPEC.inputSize;
       const context = canvas.getContext("2d", { willReadFrequently: true });
       if (!context) throw new Error("Canvas image processing is unavailable");
+      const crop = centerCropGeometry(
+        image.width,
+        image.height,
+        MODEL_SPEC.resizeShortEdge,
+        MODEL_SPEC.inputSize,
+      );
+      context.imageSmoothingEnabled = true;
+      context.imageSmoothingQuality = "high";
       context.drawImage(
         image,
+        crop.sourceX,
+        crop.sourceY,
+        crop.sourceSize,
+        crop.sourceSize,
         0,
         0,
         MODEL_SPEC.inputSize,
@@ -141,7 +157,10 @@ export class BrowserDetector {
       const output = outputs[MODEL_SPEC.outputName];
       if (!output) throw new Error(`Model output ${MODEL_SPEC.outputName} is missing`);
       const logits = Array.from(output.data as Float32Array);
-      const aiLikelihood = softmaxSynthetic(logits, MODEL_SPEC.syntheticLabelIndex);
+      const rawAiLikelihood = MODEL_SPEC.singleLogit
+        ? sigmoidLogit(logits[0] ?? Number.NaN)
+        : softmaxSynthetic(logits, MODEL_SPEC.syntheticLabelIndex);
+      const aiLikelihood = calibrateAiLikelihood(rawAiLikelihood, MODEL_SPEC.calibration);
       return {
         aiLikelihood,
         classification: aiLikelihood >= AI_THRESHOLD ? "likely-ai" : "not-flagged",

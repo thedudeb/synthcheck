@@ -137,4 +137,19 @@ await writeFile(
   path.join(outputDirectory, "manifest.jsonl"),
   `${manifest.map((item) => JSON.stringify(item)).join("\n")}\n`,
 );
+await writeFile(
+  path.join(outputDirectory, "selection.json"),
+  `${JSON.stringify({
+    schemaVersion: 1,
+    dataset: DEFACTIFY.dataset,
+    revision: DEFACTIFY.revision,
+    split,
+    totalRows: total,
+    scannedRows: Math.min(offset, total),
+    scanLimit: Number.isSafeInteger(scanLimit) ? scanLimit : null,
+    universe: offset >= total ? "entire-split" : "bounded-prefix",
+    strategy: "lowest SHA-256 priorities within the scanned row universe, stratified by source",
+    targets: Object.fromEntries([...targets].map(([source, count]) => [DEFACTIFY.sourceNames[source as keyof typeof DEFACTIFY.sourceNames], count])),
+  }, null, 2)}\n`,
+);
 console.log(`Wrote ${manifest.length} verified records to ${path.join(outputDirectory, "manifest.jsonl")}`);

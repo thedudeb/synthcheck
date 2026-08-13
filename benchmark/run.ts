@@ -24,6 +24,7 @@ const split = argument("split", "validation");
 const candidate = argument("candidate", "baseline");
 const datasetDirectory = path.resolve(`benchmark/data/defactify-${split}`);
 const manifestPath = path.join(datasetDirectory, "manifest.jsonl");
+const selectionPath = path.join(datasetDirectory, "selection.json");
 const candidateSpec = candidate === "community-forensics" || candidate === "community-forensics-int8"
   ? {
       id: candidate === "community-forensics-int8"
@@ -113,16 +114,16 @@ const candidateSpec = candidate === "community-forensics" || candidate === "comm
     }
   : {
       id: MODEL_SPEC.id,
-      defaultPath: "benchmark/models/detector.onnx",
+      defaultPath: MODEL_SPEC.bundledWeightsPath,
       expectedHash: MODEL_SPEC.weightsSha256,
       inputSize: MODEL_SPEC.inputSize,
-      resizeShortEdge: undefined,
+      resizeShortEdge: MODEL_SPEC.resizeShortEdge,
       centerCropOnly: false,
       mean: MODEL_SPEC.imageMean,
       std: MODEL_SPEC.imageStd,
       syntheticLabelIndex: MODEL_SPEC.syntheticLabelIndex,
-      singleLogit: false,
-      outputName: "logits",
+      singleLogit: MODEL_SPEC.singleLogit,
+      outputName: MODEL_SPEC.outputName,
       patchGrid: undefined,
     };
 if (!["baseline", "xrayon", "xrayon-int8", "ferretnet", "safe", "polimi", "community-forensics", "community-forensics-int8"].includes(candidate)) {
@@ -132,9 +133,14 @@ const modelPath = path.resolve(argument("model", candidateSpec.defaultPath));
 const calibrationArgument = argument("calibration", "none");
 const calibrationPath = calibrationArgument === "none" ? undefined : path.resolve(calibrationArgument);
 const calibrationText = calibrationPath ? await readFile(calibrationPath, "utf8") : undefined;
-const calibration = calibrationText ? JSON.parse(calibrationText) as PlattCalibration & { modelSha256?: string } : undefined;
+const calibration = calibrationText
+  ? JSON.parse(calibrationText) as PlattCalibration & { modelSha256?: string; method?: string }
+  : undefined;
 const resultDirectory = path.resolve("benchmark/results");
 const manifestText = await readFile(manifestPath, "utf8");
+const selection = await readFile(selectionPath, "utf8")
+  .then((text) => JSON.parse(text) as Record<string, unknown>)
+  .catch(() => null);
 let items = manifestText
   .trim()
   .split("\n")
@@ -338,7 +344,7 @@ const summary = {
   model: { id: candidateSpec.id, sha256: modelHash, bytes: modelBytes.byteLength },
   calibration: calibrationText
     ? {
-        method: "Platt scaling over raw probability logits",
+        method: calibration!.method ?? "Platt scaling over raw probability logits",
         path: path.relative(process.cwd(), calibrationPath!),
         sha256: sha256(calibrationText),
         slope: calibration!.slope,
@@ -349,7 +355,8 @@ const summary = {
     manifest: path.relative(process.cwd(), manifestPath),
     manifestSha256: sha256(manifestText),
     split,
-    sampleMethod: "lowest SHA-256 priorities over immutable dataset row identities, stratified by source",
+    sampleMethod: "lowest SHA-256 priorities within the scanned row universe, stratified by source",
+    selection,
     diagnosticSubset: realLimit > 0 ? { realLimit, perGeneratorLimit } : null,
   },
   metrics,

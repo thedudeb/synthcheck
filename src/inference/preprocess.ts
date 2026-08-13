@@ -14,6 +14,20 @@ export function centerCropGeometry(
   };
 }
 
+export function resizeShortEdgeGeometry(
+  width: number,
+  height: number,
+  shortEdge = 256,
+  maximumLongEdge = 4096,
+): { width: number; height: number } {
+  if (width <= 0 || height <= 0) throw new Error("Image dimensions must be positive");
+  const scale = Math.min(shortEdge / Math.min(width, height), maximumLongEdge / Math.max(width, height));
+  return {
+    width: Math.max(1, Math.round(width * scale)),
+    height: Math.max(1, Math.round(height * scale)),
+  };
+}
+
 export function imageDataToNormalizedChw(
   imageData: ImageData,
   mean: readonly [number, number, number],
@@ -56,4 +70,9 @@ export function softmaxSynthetic(logits: readonly number[], syntheticIndex: numb
   const synthetic = exponentials[syntheticIndex];
   if (synthetic === undefined || total === 0) throw new Error("Detector returned invalid probabilities");
   return synthetic / total;
+}
+
+export function sigmoidLogit(logit: number): number {
+  if (!Number.isFinite(logit)) throw new Error("Detector returned an invalid logit");
+  return 1 / (1 + Math.exp(-Math.max(-40, Math.min(40, logit))));
 }

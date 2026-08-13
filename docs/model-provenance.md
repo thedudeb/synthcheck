@@ -1,33 +1,41 @@
 # Model provenance
 
-## Current baseline
+## Shipping detector
 
 | Field | Value |
 | --- | --- |
-| Model | `onnx-community/ai-image-detection-ONNX`, Q4 artifact |
-| Immutable revision | `e3cfe99f2841930a040a6281682c10c989965603` |
-| Upstream model | `capcheck/ai-image-detection` |
-| Architecture | ViT-Base, 224×224 input |
-| Training dataset reported upstream | CIFAKE |
-| License reported upstream | Apache-2.0 |
-| Weight file | `onnx/model_q4.onnx` |
-| File size | 56,757,898 bytes |
-| SHA-256 | `28c7f06d5aa87bc7e023c023eab1fbf473deef54e9c62f9838a99e50422810ec` |
+| Model | `OwensLab/commfor-model-224` |
+| Upstream revision | `26afc31e6b40c312c3fd42c05a758be62446215b` |
+| Architecture | ViT-Small/16, 224×224 input, single synthetic-image logit |
+| Training data reported upstream | Community Forensics / Community Forensics Small, spanning thousands of generators |
+| Model license reported upstream | MIT |
+| Original artifact | `model.safetensors`, 21,666,049 FP32 parameters |
+| Original SHA-256 | `a6cc439d5a6d2dfadd60c77d27a2838ad55b34e601ecd30f46ad97266d6ac4e0` |
+| Shipping artifact | `weights/community-forensics-int8.onnx` |
+| Shipping size | 23,433,075 bytes |
+| Shipping SHA-256 | `9c7a92aafb3a5c14b1626a4cb10a241205254620c6d4a6cc60ca91c15533fc20` |
 | Input/output | `pixel_values` → `logits` |
-| Label mapping | `0 = REAL`, `1 = FAKE` |
-| Normalization | RGB resized to 224×224, mean `[0.5, 0.5, 0.5]`, standard deviation `[0.5, 0.5, 0.5]` |
+| Preprocessing | Resize short edge to 256, center-crop 224×224, ImageNet RGB mean/std |
+| Calibration | Log-odds slope 1, intercept `3.563478187572664`; raw 5% maps to displayed 65% |
 
-Source repository: <https://huggingface.co/onnx-community/ai-image-detection-ONNX>
+Upstream model: <https://huggingface.co/OwensLab/commfor-model-224>
 
-The extension downloads weights only from a URL containing the immutable revision and verifies the digest before storing them. ONNX Runtime Web is installed from the pinned npm lockfile and bundled into the extension; it is not fetched at runtime.
+Upstream training/evaluation code: <https://github.com/JeongsooP/Community-Forensics>
 
-## Known limitations
+The original weights are pinned by revision and digest. `benchmark/candidates/community_forensics/export.py` reconstructs the upstream timm architecture and exports FP32 ONNX; `quantize.py` applies deterministic per-channel dynamic INT8 quantization to MatMul/Gemm weights. Both export parity and browser-runtime loading were verified before selection.
 
-- The upstream model card identifies older training data and warns that performance on newer generators, compression, and small images may vary.
-- Upstream classification metrics are not sufficient evidence for SynthCheck's web-realistic bounty target.
-- Quantization can change calibration. The fixed 65% threshold must be measured directly against the exact Q4 browser artifact.
-- This is a provisional baseline until a leak-resistant held-out benchmark proves or disproves it.
+The final ONNX artifact is checked into the repository and bundled into the extension build. Setup recomputes its SHA-256 digest before IndexedDB storage, so no remote weight or inference-asset request occurs at runtime.
 
-## Candidate-selection rule
+## Calibration and selection discipline
 
-A replacement model must have redistributable weights, traceable provenance, a browser-compatible ONNX graph, acceptable browser resource use, and better source-separated held-out balanced accuracy at the required threshold. Model selection must not use the final held-out partition.
+The displayed decision boundary is fixed at the bounty's required 65%. A monotonic intercept calibration maps the validation-selected conservative native threshold of 5% to that displayed boundary without changing rank ordering. The calibration was frozen before evaluating the quantized artifact on the diagnostic test sample.
+
+The checked-in quantized report records 77.6% balanced accuracy on 1,000 images: 92.8% real-image recall and 62.4% synthetic-image recall. That split was subsequently exposed and is retained only as transparent diagnostic evidence, not as a future model-selection set.
+
+## Licenses and attribution
+
+- Community Forensics code and published model weights identify MIT licensing.
+- ONNX Runtime Web is distributed by Microsoft under the MIT License.
+- The local benchmark images are not redistributed or committed; dataset licenses remain with their publishers.
+
+The project root [MIT License](../LICENSE) covers SynthCheck's original source. Third-party copyright notices and license terms remain with their respective projects.

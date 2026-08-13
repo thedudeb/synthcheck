@@ -52,7 +52,7 @@ try {
   const extensionId = new URL(worker.url()).host;
   const setup = await context.newPage();
   await setup.goto(`chrome-extension://${extensionId}/setup.html`);
-  await setup.getByRole("button", { name: /download verified model/i }).click();
+  await setup.getByRole("button", { name: /prepare verified model/i }).click();
   await setup.getByRole("heading", { name: "Offline ready" }).waitFor({ timeout: 180_000 });
   await context.close();
 

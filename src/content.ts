@@ -5,6 +5,8 @@ import {
   type PageStats,
   type SiteStateResponse,
 } from "./shared/contracts";
+import { resizeShortEdgeGeometry } from "./inference/preprocess";
+import { MODEL_SPEC } from "./shared/model-spec";
 
 const MIN_DIMENSION = 64;
 const POSITION_MARGIN = 6;
@@ -107,11 +109,18 @@ function sourceFor(image: HTMLImageElement): string {
 
 function inferenceUrlFor(image: HTMLImageElement, fallback: string): string {
   try {
+    const snapshot = resizeShortEdgeGeometry(
+      image.naturalWidth,
+      image.naturalHeight,
+      MODEL_SPEC.resizeShortEdge,
+    );
     const canvas = document.createElement("canvas");
-    canvas.width = 224;
-    canvas.height = 224;
+    canvas.width = snapshot.width;
+    canvas.height = snapshot.height;
     const context = canvas.getContext("2d");
     if (!context) return fallback;
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = "high";
     context.drawImage(image, 0, 0, canvas.width, canvas.height);
     // Reading the canvas throws for inaccessible cross-origin images. For
     // accessible images this lossless snapshot prevents a second network fetch.

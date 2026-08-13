@@ -3,6 +3,8 @@ import {
   centerCropGeometry,
   imageDataToNormalizedChw,
   rgbBytesToNormalizedChw,
+  resizeShortEdgeGeometry,
+  sigmoidLogit,
   softmaxSynthetic,
 } from "../src/inference/preprocess";
 
@@ -35,6 +37,12 @@ describe("image preprocessing", () => {
     });
   });
 
+  it("resizes the short edge while preserving aspect ratio", () => {
+    expect(resizeShortEdgeGeometry(400, 200)).toEqual({ width: 512, height: 256 });
+    expect(resizeShortEdgeGeometry(200, 400)).toEqual({ width: 256, height: 512 });
+    expect(resizeShortEdgeGeometry(100_000, 100)).toEqual({ width: 4096, height: 4 });
+  });
+
   it("produces the same tensor from equivalent RGB and RGBA buffers", () => {
     const rgb = rgbBytesToNormalizedChw(
       new Uint8Array([10, 20, 30, 200, 210, 220]),
@@ -57,6 +65,12 @@ describe("image preprocessing", () => {
 });
 
 describe("output calibration primitives", () => {
+  it("converts a finite single logit to a probability", () => {
+    expect(sigmoidLogit(0)).toBe(0.5);
+    expect(sigmoidLogit(Math.log(3))).toBeCloseTo(0.75, 8);
+    expect(() => sigmoidLogit(Number.NaN)).toThrow("invalid logit");
+  });
+
   it("maps the configured synthetic logit through softmax", () => {
     expect(softmaxSynthetic([0, Math.log(3)], 1)).toBeCloseTo(0.75, 8);
   });

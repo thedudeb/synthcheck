@@ -16,7 +16,7 @@
     "manifest": "benchmark/data/defactify-test/manifest.jsonl",
     "manifestSha256": "0fe74289bde79e8478cb68e141a1658254a8b65d6135dda6a602dd4edabb5022",
     "split": "test",
-    "sampleMethod": "lowest SHA-256 priorities over immutable dataset row identities, stratified by source",
+    "sampleMethod": "lowest SHA-256 priorities within the scanned row universe, stratified by source",
     "diagnosticSubset": null
   },
   "metrics": {

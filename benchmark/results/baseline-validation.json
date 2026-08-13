@@ -15,7 +15,7 @@
     "manifest": "benchmark/data/defactify-validation/manifest.jsonl",
     "manifestSha256": "ad38248e2864338bc9db207bb663ba1def5457a6d42d3f7b5c5532bd58925e2c",
     "split": "validation",
-    "sampleMethod": "lowest SHA-256 priorities over immutable dataset row identities, stratified by source"
+    "sampleMethod": "lowest SHA-256 priorities within the scanned row universe, stratified by source"
   },
   "metrics": {
     "threshold": 0.65,

@@ -19,6 +19,13 @@ async function copyStatic() {
     (name) => name.startsWith("ort-wasm") && (name.endsWith(".wasm") || name.endsWith(".mjs")),
   );
   await Promise.all(runtimeFiles.map((name) => cp(path.join(ortSource, name), path.join(ortTarget, name))));
+
+  const weightsTarget = path.join(outdir, "weights");
+  await mkdir(weightsTarget, { recursive: true });
+  await cp(
+    path.join(root, "weights", "community-forensics-int8.onnx"),
+    path.join(weightsTarget, "community-forensics-int8.onnx"),
+  );
 }
 
 await rm(outdir, { recursive: true, force: true });

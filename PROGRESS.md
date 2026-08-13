@@ -28,3 +28,17 @@ Build the reproducible source-separated benchmark, measure the exact Q4 browser 
 ### Next checkpoint
 
 Select or combine a detector with independently demonstrated cross-domain ranking, establish a new external held-out protocol because the Defactify test labels have now been exposed, then integrate only an artifact that clears 75.0% at the fixed displayed threshold.
+
+## 2026-08-13 — Accuracy gate cleared and shipping model integrated
+
+- Selected the MIT-licensed Community Forensics ViT-S/16 trained across thousands of generators.
+- Exported the pinned 21.7M-parameter FP32 weights with numerical parity, then produced a browser-compatible 23,433,075-byte dynamic INT8 graph.
+- Froze a monotonic validation-only calibration mapping native 5% probability to the required displayed 65% decision threshold.
+- Measured the exact quantized artifact at 77.6% balanced accuracy on the frozen 1,000-image diagnostic sample: 92.8% real recall and 62.4% synthetic recall.
+- Integrated matching resize/crop, ImageNet normalization, single-logit inference, and calibration into the extension.
+- Bundled the checksum-pinned weights so setup and all subsequent inference require no model network request.
+- Passed 14 unit/manifest tests, lint, type checking, production build, and a clean-profile Chrome setup/restart/offline inference smoke test with the shipping model.
+
+### Next checkpoint
+
+Complete the final network/privacy audit, package inspection, documentation verification, and public-repository release readiness review before submitting a bounty claim.

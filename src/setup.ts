@@ -27,7 +27,7 @@ function render(status: ModelStatus): void {
     installButton.disabled = true;
   } else if (status.state === "downloading") {
     stateElement.textContent = "Downloading and verifying…";
-    detailElement.textContent = "Keep this page open until setup finishes.";
+    detailElement.textContent = "Keep this page open while the bundled model is verified and prepared for offline use.";
     installButton.disabled = true;
   } else if (status.state === "error") {
     stateElement.textContent = "Setup failed";
@@ -36,7 +36,7 @@ function render(status: ModelStatus): void {
     installButton.disabled = false;
   } else {
     stateElement.textContent = "Model required";
-    detailElement.textContent = "Download the pinned model once. Its SHA-256 checksum will be verified before it is stored.";
+    detailElement.textContent = "Prepare the bundled model once. Its SHA-256 checksum will be verified before it is stored.";
     installButton.disabled = false;
   }
 }
