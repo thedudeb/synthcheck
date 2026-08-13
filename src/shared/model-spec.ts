@@ -25,11 +25,11 @@ export const MODEL_SPEC: ModelSpec = {
   id: "SynthCheck/community-forensics-modern-rehead-v2@20260813:int8-dynamic",
   displayName: "SynthCheck Modern Forensics ViT-S/16 (INT8)",
   sourceRepository: "https://github.com/thedudeb/synthcheck",
-  sourceRevision: "main",
+  sourceRevision: "83dffb983b440ca35f651deed263abe7ebb153bc",
   upstreamRepository: "https://huggingface.co/OwensLab/commfor-model-224",
   upstreamRevision: "26afc31e6b40c312c3fd42c05a758be62446215b",
   weightsUrl:
-    "https://raw.githubusercontent.com/thedudeb/synthcheck/main/weights/community-forensics-int8.onnx",
+    "https://raw.githubusercontent.com/thedudeb/synthcheck/83dffb983b440ca35f651deed263abe7ebb153bc/weights/community-forensics-int8.onnx",
   bundledWeightsPath: "weights/community-forensics-int8.onnx",
   weightsSha256: "d0712f939ef34ab9470eac357e483e188672f472798d4093ddb5d7e5030cd9f4",
   weightsBytes: 23_433_075,
