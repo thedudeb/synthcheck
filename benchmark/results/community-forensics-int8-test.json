@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "executedAt": "2026-08-13T16:03:33.278Z",
+  "runtime": {
+    "node": "v24.19.0",
+    "onnxruntimeWeb": "1.22.0",
+    "threads": 1
+  },
+  "model": {
+    "id": "OwensLab/commfor-model-224@26afc31:int8-dynamic",
+    "sha256": "9c7a92aafb3a5c14b1626a4cb10a241205254620c6d4a6cc60ca91c15533fc20",
+    "bytes": 23433075
+  },
+  "calibration": {
+    "method": "Platt scaling over raw probability logits",
+    "path": "benchmark/candidates/community_forensics/calibration-int8.json",
+    "sha256": "90244355dd4a6000d13f5f9bcc27350ce32707c3714b49b26daa4f3377749abb",
+    "slope": 1,
+    "intercept": 3.563478187572664
+  },
+  "dataset": {
+    "manifest": "benchmark/data/defactify-test/manifest.jsonl",
+    "manifestSha256": "0fe74289bde79e8478cb68e141a1658254a8b65d6135dda6a602dd4edabb5022",
+    "split": "test",
+    "sampleMethod": "lowest SHA-256 priorities over immutable dataset row identities, stratified by source",
+    "diagnosticSubset": null
+  },
+  "metrics": {
+    "threshold": 0.65,
+    "count": 1000,
+    "realCount": 500,
+    "syntheticCount": 500,
+    "trueRealRate": 0.928,
+    "trueSyntheticRate": 0.624,
+    "balancedAccuracy": 0.776,
+    "accuracy": 0.776,
+    "bySource": [
+      {
+        "source": "dalle3",
+        "count": 100,
+        "accuracy": 0.79,
+        "meanAiLikelihood": 0.8394802291410302
+      },
+      {
+        "source": "midjourney6",
+        "count": 100,
+        "accuracy": 0.55,
+        "meanAiLikelihood": 0.6306462096919929
+      },
+      {
+        "source": "real",
+        "count": 500,
+        "accuracy": 0.928,
+        "meanAiLikelihood": 0.16210688788248487
+      },
+      {
+        "source": "sd21",
+        "count": 100,
+        "accuracy": 0.75,
+        "meanAiLikelihood": 0.7868596683773942
+      },
+      {
+        "source": "sd3",
+        "count": 100,
+        "accuracy": 0.43,
+        "meanAiLikelihood": 0.521791340981104
+      },
+      {
+        "source": "sdxl",
+        "count": 100,
+        "accuracy": 0.6,
+        "meanAiLikelihood": 0.6704472232695572
+      }
+    ]
+  }
+}

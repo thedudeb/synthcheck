@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "executedAt": "2026-08-13T15:24:52.187Z",
+  "runtime": {
+    "node": "v24.19.0",
+    "onnxruntimeWeb": "1.22.0",
+    "threads": 1
+  },
+  "model": {
+    "id": "Ouxiang-Li/SAFE@official:checkpoint-best-fp32",
+    "sha256": "e50e082e4b85217018de9130cee7816edfdf47e442d17aaf610ec8b428cd6e33",
+    "bytes": 5748736
+  },
+  "calibration": null,
+  "dataset": {
+    "manifest": "benchmark/data/defactify-test/manifest.jsonl",
+    "manifestSha256": "0fe74289bde79e8478cb68e141a1658254a8b65d6135dda6a602dd4edabb5022",
+    "split": "test",
+    "sampleMethod": "lowest SHA-256 priorities over immutable dataset row identities, stratified by source",
+    "diagnosticSubset": null
+  },
+  "metrics": {
+    "threshold": 0.65,
+    "count": 1000,
+    "realCount": 500,
+    "syntheticCount": 500,
+    "trueRealRate": 1,
+    "trueSyntheticRate": 0,
+    "balancedAccuracy": 0.5,
+    "accuracy": 0.5,
+    "bySource": [
+      {
+        "source": "dalle3",
+        "count": 100,
+        "accuracy": 0,
+        "meanAiLikelihood": 0.04680737102456753
+      },
+      {
+        "source": "midjourney6",
+        "count": 100,
+        "accuracy": 0,
+        "meanAiLikelihood": 0.0747992784890694
+      },
+      {
+        "source": "real",
+        "count": 500,
+        "accuracy": 1,
+        "meanAiLikelihood": 0.04468645763613528
+      },
+      {
+        "source": "sd21",
+        "count": 100,
+        "accuracy": 0,
+        "meanAiLikelihood": 0.04438150100621375
+      },
+      {
+        "source": "sd3",
+        "count": 100,
+        "accuracy": 0,
+        "meanAiLikelihood": 0.05204391981034392
+      },
+      {
+        "source": "sdxl",
+        "count": 100,
+        "accuracy": 0,
+        "meanAiLikelihood": 0.03846479772146736
+      }
+    ]
+  }
+}

@@ -5,6 +5,7 @@ coverage/
 benchmark/data/
 benchmark/models/
 benchmark/candidates/*/*.pth
+benchmark/candidates/*/*.safetensors
 benchmark/candidates/*/*.onnx
 benchmark/.venv/
 **/__pycache__/

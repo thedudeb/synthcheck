@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "executedAt": "2026-08-13T15:43:37.876Z",
+  "runtime": {
+    "node": "v24.19.0",
+    "onnxruntimeWeb": "1.22.0",
+    "threads": 1
+  },
+  "model": {
+    "id": "polimi-ispl/synthetic-image-detection@official:synth-vs-real-fp32",
+    "sha256": "327da4f966688c82caac774b7afe6e6f2929c820ef79c76fd3818970f7ba9bd8",
+    "bytes": 70171912
+  },
+  "calibration": {
+    "method": "Platt scaling over raw probability logits",
+    "path": "benchmark/candidates/polimi/calibration.json",
+    "sha256": "8809a55f8905168da767e7703231f422af968aa90fa3d5de342fd0eacee20a78",
+    "slope": 5.075272455554085,
+    "intercept": 1.7717697835732629
+  },
+  "dataset": {
+    "manifest": "benchmark/data/defactify-test/manifest.jsonl",
+    "manifestSha256": "0fe74289bde79e8478cb68e141a1658254a8b65d6135dda6a602dd4edabb5022",
+    "split": "test",
+    "sampleMethod": "lowest SHA-256 priorities over immutable dataset row identities, stratified by source",
+    "diagnosticSubset": {
+      "realLimit": 100,
+      "perGeneratorLimit": 20
+    }
+  },
+  "metrics": {
+    "threshold": 0.65,
+    "count": 200,
+    "realCount": 100,
+    "syntheticCount": 100,
+    "trueRealRate": 0.9,
+    "trueSyntheticRate": 0.49,
+    "balancedAccuracy": 0.6950000000000001,
+    "accuracy": 0.695,
+    "bySource": [
+      {
+        "source": "dalle3",
+        "count": 20,
+        "accuracy": 0.75,
+        "meanAiLikelihood": 0.777972657220651
+      },
+      {
+        "source": "midjourney6",
+        "count": 20,
+        "accuracy": 0.3,
+        "meanAiLikelihood": 0.5133761521725431
+      },
+      {
+        "source": "real",
+        "count": 100,
+        "accuracy": 0.9,
+        "meanAiLikelihood": 0.31876969971828933
+      },
+      {
+        "source": "sd21",
+        "count": 20,
+        "accuracy": 0.45,
+        "meanAiLikelihood": 0.6154585042843637
+      },
+      {
+        "source": "sd3",
+        "count": 20,
+        "accuracy": 0.35,
+        "meanAiLikelihood": 0.501021282556413
+      },
+      {
+        "source": "sdxl",
+        "count": 20,
+        "accuracy": 0.6,
+        "meanAiLikelihood": 0.6768687463140398
+      }
+    ]
+  }
+}

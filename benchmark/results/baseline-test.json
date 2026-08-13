@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "executedAt": "2026-08-13T15:37:37.261Z",
+  "runtime": {
+    "node": "v24.19.0",
+    "onnxruntimeWeb": "1.22.0",
+    "threads": 1
+  },
+  "model": {
+    "id": "onnx-community/ai-image-detection-ONNX@e3cfe99:model-q4",
+    "sha256": "28c7f06d5aa87bc7e023c023eab1fbf473deef54e9c62f9838a99e50422810ec",
+    "bytes": 56757898
+  },
+  "calibration": null,
+  "dataset": {
+    "manifest": "benchmark/data/defactify-test/manifest.jsonl",
+    "manifestSha256": "0fe74289bde79e8478cb68e141a1658254a8b65d6135dda6a602dd4edabb5022",
+    "split": "test",
+    "sampleMethod": "lowest SHA-256 priorities over immutable dataset row identities, stratified by source",
+    "diagnosticSubset": null
+  },
+  "metrics": {
+    "threshold": 0.65,
+    "count": 1000,
+    "realCount": 500,
+    "syntheticCount": 500,
+    "trueRealRate": 0.45,
+    "trueSyntheticRate": 0.758,
+    "balancedAccuracy": 0.604,
+    "accuracy": 0.604,
+    "bySource": [
+      {
+        "source": "dalle3",
+        "count": 100,
+        "accuracy": 0.87,
+        "meanAiLikelihood": 0.8448036115574908
+      },
+      {
+        "source": "midjourney6",
+        "count": 100,
+        "accuracy": 0.75,
+        "meanAiLikelihood": 0.7674856558639424
+      },
+      {
+        "source": "real",
+        "count": 500,
+        "accuracy": 0.45,
+        "meanAiLikelihood": 0.6880081955045556
+      },
+      {
+        "source": "sd21",
+        "count": 100,
+        "accuracy": 0.62,
+        "meanAiLikelihood": 0.7328013931966576
+      },
+      {
+        "source": "sd3",
+        "count": 100,
+        "accuracy": 0.72,
+        "meanAiLikelihood": 0.7580158243085662
+      },
+      {
+        "source": "sdxl",
+        "count": 100,
+        "accuracy": 0.83,
+        "meanAiLikelihood": 0.8170693898811714
+      }
+    ]
+  }
+}

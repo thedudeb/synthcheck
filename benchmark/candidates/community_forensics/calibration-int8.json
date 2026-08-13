@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "method": "Monotonic log-odds intercept calibration",
+  "slope": 1,
+  "intercept": 3.563478187572664,
+  "rawDecisionThreshold": 0.05,
+  "displayDecisionThreshold": 0.65,
+  "fittedOn": {
+    "split": "validation",
+    "count": 500,
+    "predictions": "benchmark/results/community-forensics-int8-validation-predictions.jsonl",
+    "predictionsSha256": "3f4b2ac6fda4a3e93a23e0c6c8b39f10585697f0b4b39d5eaecbb042e42d4266"
+  },
+  "modelSha256": "9c7a92aafb3a5c14b1626a4cb10a241205254620c6d4a6cc60ca91c15533fc20",
+  "objective": "Balanced accuracy with a conservative threshold selected from the validation plateau",
+  "note": "Frozen before quantized-model test-split evaluation. Maps raw p=0.05 to displayed p=0.65 without changing rank ordering."
+}

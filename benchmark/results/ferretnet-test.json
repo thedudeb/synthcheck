@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "executedAt": "2026-08-13T15:25:08.841Z",
+  "runtime": {
+    "node": "v24.19.0",
+    "onnxruntimeWeb": "1.22.0",
+    "threads": 1
+  },
+  "model": {
+    "id": "xigua7105/FerretNet@official:ferretnet-b-median-3-fp32",
+    "sha256": "bd4b65b5cedfb20418ccd546999bd5cd4cc3e48e6dda46a847eb0508a34d3bfa",
+    "bytes": 5815337
+  },
+  "calibration": null,
+  "dataset": {
+    "manifest": "benchmark/data/defactify-test/manifest.jsonl",
+    "manifestSha256": "0fe74289bde79e8478cb68e141a1658254a8b65d6135dda6a602dd4edabb5022",
+    "split": "test",
+    "sampleMethod": "lowest SHA-256 priorities over immutable dataset row identities, stratified by source",
+    "diagnosticSubset": null
+  },
+  "metrics": {
+    "threshold": 0.65,
+    "count": 1000,
+    "realCount": 500,
+    "syntheticCount": 500,
+    "trueRealRate": 1,
+    "trueSyntheticRate": 0.002,
+    "balancedAccuracy": 0.501,
+    "accuracy": 0.501,
+    "bySource": [
+      {
+        "source": "dalle3",
+        "count": 100,
+        "accuracy": 0,
+        "meanAiLikelihood": 0.001233813748619688
+      },
+      {
+        "source": "midjourney6",
+        "count": 100,
+        "accuracy": 0.01,
+        "meanAiLikelihood": 0.00791180458773529
+      },
+      {
+        "source": "real",
+        "count": 500,
+        "accuracy": 1,
+        "meanAiLikelihood": 0.0002888523615168943
+      },
+      {
+        "source": "sd21",
+        "count": 100,
+        "accuracy": 0,
+        "meanAiLikelihood": 0.0001727085701900426
+      },
+      {
+        "source": "sd3",
+        "count": 100,
+        "accuracy": 0,
+        "meanAiLikelihood": 0.006152921498389708
+      },
+      {
+        "source": "sdxl",
+        "count": 100,
+        "accuracy": 0,
+        "meanAiLikelihood": 0.00010018160750194753
+      }
+    ]
+  }
+}

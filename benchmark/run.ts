@@ -24,7 +24,58 @@ const split = argument("split", "validation");
 const candidate = argument("candidate", "baseline");
 const datasetDirectory = path.resolve(`benchmark/data/defactify-${split}`);
 const manifestPath = path.join(datasetDirectory, "manifest.jsonl");
-const candidateSpec = candidate === "ferretnet"
+const candidateSpec = candidate === "community-forensics" || candidate === "community-forensics-int8"
+  ? {
+      id: candidate === "community-forensics-int8"
+        ? "OwensLab/commfor-model-224@26afc31:int8-dynamic"
+        : "OwensLab/commfor-model-224@26afc31:fp32",
+      defaultPath: candidate === "community-forensics-int8"
+        ? "benchmark/candidates/community_forensics/model-int8.onnx"
+        : "benchmark/candidates/community_forensics/model.onnx",
+      expectedHash: candidate === "community-forensics-int8"
+        ? "9c7a92aafb3a5c14b1626a4cb10a241205254620c6d4a6cc60ca91c15533fc20"
+        : "1a9a8ec0503cbae9d6fa0f3c5e96ced57a6d9a2a2ce2e923d8e954b4a11a1226",
+      inputSize: 224,
+      resizeShortEdge: 256,
+      centerCropOnly: false,
+      mean: [0.485, 0.456, 0.406] as const,
+      std: [0.229, 0.224, 0.225] as const,
+      syntheticLabelIndex: 0,
+      singleLogit: true,
+      outputName: "logits",
+      patchGrid: undefined,
+    }
+  : candidate === "safe"
+  ? {
+      id: "Ouxiang-Li/SAFE@official:checkpoint-best-fp32",
+      defaultPath: "benchmark/candidates/safe/model.onnx",
+      expectedHash: "e50e082e4b85217018de9130cee7816edfdf47e442d17aaf610ec8b428cd6e33",
+      inputSize: 256,
+      resizeShortEdge: undefined,
+      centerCropOnly: true,
+      mean: [0, 0, 0] as const,
+      std: [1, 1, 1] as const,
+      syntheticLabelIndex: 1,
+      singleLogit: false,
+      outputName: "logits",
+      patchGrid: undefined,
+    }
+  : candidate === "polimi"
+  ? {
+      id: "polimi-ispl/synthetic-image-detection@official:synth-vs-real-fp32",
+      defaultPath: "benchmark/candidates/polimi/model.onnx",
+      expectedHash: "327da4f966688c82caac774b7afe6e6f2929c820ef79c76fd3818970f7ba9bd8",
+      inputSize: 96,
+      resizeShortEdge: undefined,
+      centerCropOnly: false,
+      mean: [0.485, 0.456, 0.406] as const,
+      std: [0.229, 0.224, 0.225] as const,
+      syntheticLabelIndex: 1,
+      singleLogit: false,
+      outputName: "patch_logits",
+      patchGrid: 5,
+    }
+  : candidate === "ferretnet"
   ? {
       id: "xigua7105/FerretNet@official:ferretnet-b-median-3-fp32",
       defaultPath: "benchmark/candidates/ferretnet/model.onnx",
@@ -36,6 +87,8 @@ const candidateSpec = candidate === "ferretnet"
       std: [0.26862954, 0.26130258, 0.27577711] as const,
       syntheticLabelIndex: 0,
       singleLogit: true,
+      outputName: "logits",
+      patchGrid: undefined,
     }
   : candidate === "xrayon" || candidate === "xrayon-int8"
   ? {
@@ -55,6 +108,8 @@ const candidateSpec = candidate === "ferretnet"
       std: [0.229, 0.224, 0.225] as const,
       syntheticLabelIndex: 1,
       singleLogit: false,
+      outputName: "logits",
+      patchGrid: undefined,
     }
   : {
       id: MODEL_SPEC.id,
@@ -67,8 +122,12 @@ const candidateSpec = candidate === "ferretnet"
       std: MODEL_SPEC.imageStd,
       syntheticLabelIndex: MODEL_SPEC.syntheticLabelIndex,
       singleLogit: false,
+      outputName: "logits",
+      patchGrid: undefined,
     };
-if (!["baseline", "xrayon", "xrayon-int8", "ferretnet"].includes(candidate)) throw new Error(`Unknown candidate: ${candidate}`);
+if (!["baseline", "xrayon", "xrayon-int8", "ferretnet", "safe", "polimi", "community-forensics", "community-forensics-int8"].includes(candidate)) {
+  throw new Error(`Unknown candidate: ${candidate}`);
+}
 const modelPath = path.resolve(argument("model", candidateSpec.defaultPath));
 const calibrationArgument = argument("calibration", "none");
 const calibrationPath = calibrationArgument === "none" ? undefined : path.resolve(calibrationArgument);
@@ -109,7 +168,7 @@ const session = await ort.InferenceSession.create(modelBytes, {
   graphOptimizationLevel: "all",
   logSeverityLevel: 3,
 });
-if (!session.inputNames.includes(MODEL_SPEC.inputName) || !session.outputNames.includes(MODEL_SPEC.outputName)) {
+if (!session.inputNames.includes(MODEL_SPEC.inputName) || !session.outputNames.includes(candidateSpec.outputName)) {
   throw new Error(`Unexpected graph interface: ${session.inputNames.join(",")} -> ${session.outputNames.join(",")}`);
 }
 
@@ -123,6 +182,59 @@ for (const [index, item] of items.entries()) {
   const originalBytes = await readFile(absoluteImagePath);
   if (sha256(originalBytes) !== item.imageSha256) throw new Error(`Image integrity mismatch: ${item.id}`);
   const startedAt = performance.now();
+  if (candidateSpec.patchGrid) {
+    let patchSource = sharp(originalBytes).toColourspace("srgb").removeAlpha();
+    const metadata = await patchSource.metadata();
+    if (!metadata.width || !metadata.height) throw new Error(`Missing dimensions for ${item.id}`);
+    if (Math.min(metadata.width, metadata.height) < 256) {
+      patchSource = patchSource.resize(256, 256, { fit: "outside", kernel: "linear" });
+    }
+    const decoded = await patchSource.raw().toBuffer({ resolveWithObject: true });
+    if (decoded.info.channels !== 3) throw new Error(`Expected RGB image for ${item.id}`);
+    const gridSize = candidateSpec.patchGrid;
+    const patchArea = candidateSpec.inputSize * candidateSpec.inputSize;
+    const patchCount = gridSize * gridSize;
+    const input = new Float32Array(patchCount * patchArea * 3);
+    let patchIndex = 0;
+    for (let gridY = 0; gridY < gridSize; gridY += 1) {
+      const top = Math.round(gridY * (decoded.info.height - candidateSpec.inputSize) / (gridSize - 1));
+      for (let gridX = 0; gridX < gridSize; gridX += 1) {
+        const left = Math.round(gridX * (decoded.info.width - candidateSpec.inputSize) / (gridSize - 1));
+        for (let y = 0; y < candidateSpec.inputSize; y += 1) {
+          for (let x = 0; x < candidateSpec.inputSize; x += 1) {
+            const pixel = ((top + y) * decoded.info.width + left + x) * 3;
+            const target = y * candidateSpec.inputSize + x;
+            for (let channel = 0; channel < 3; channel += 1) {
+              input[patchIndex * patchArea * 3 + channel * patchArea + target] =
+                (decoded.data[pixel + channel]! / 255 - candidateSpec.mean[channel]!) / candidateSpec.std[channel]!;
+            }
+          }
+        }
+        patchIndex += 1;
+      }
+    }
+    const outputs = await session.run({
+      [MODEL_SPEC.inputName]: new ort.Tensor("float32", input, [patchCount, 3, candidateSpec.inputSize, candidateSpec.inputSize]),
+    });
+    const output = outputs[candidateSpec.outputName];
+    if (!output) throw new Error(`Missing model output for ${item.id}`);
+    const logits = Array.from(output.data as Float32Array);
+    const syntheticLogits = Array.from({ length: patchCount }, (_, index) => logits[index * 2 + 1]!);
+    const meanLogit = syntheticLogits.reduce((sum, value) => sum + value, 0) / syntheticLogits.length;
+    const rawAiLikelihood = 1 / (1 + Math.exp(-Math.max(-40, Math.min(40, meanLogit))));
+    const aiLikelihood = calibration ? calibrateAiLikelihood(rawAiLikelihood, calibration) : rawAiLikelihood;
+    const prediction: Prediction = {
+      ...item,
+      rawAiLikelihood,
+      aiLikelihood,
+      predictedLabel: aiLikelihood >= AI_THRESHOLD ? 1 : 0,
+      durationMs: Math.round(performance.now() - startedAt),
+    };
+    predictions.push(prediction);
+    predictionStream.write(`${JSON.stringify(prediction)}\n`);
+    if ((index + 1) % 10 === 0 || index + 1 === items.length) console.log(`Evaluated ${index + 1}/${items.length}`);
+    continue;
+  }
   const source = sharp(originalBytes).toColourspace("srgb").removeAlpha();
   const { data, info } = candidateSpec.centerCropOnly
     ? await (async () => {
@@ -134,7 +246,7 @@ for (const [index, item] of items.entries()) {
         const topPad = Math.floor(padHeight / 2);
         const paddedWidth = metadata.width + padWidth;
         const paddedHeight = metadata.height + padHeight;
-        return source
+        const padded = await source
           .extend({
             left: leftPad,
             right: padWidth - leftPad,
@@ -142,6 +254,9 @@ for (const [index, item] of items.entries()) {
             bottom: padHeight - topPad,
             background: { r: 0, g: 0, b: 0 },
           })
+          .raw()
+          .toBuffer({ resolveWithObject: true });
+        return sharp(padded.data, { raw: padded.info })
           .extract({
             left: Math.floor((paddedWidth - candidateSpec.inputSize) / 2),
             top: Math.floor((paddedHeight - candidateSpec.inputSize) / 2),
@@ -188,7 +303,7 @@ for (const [index, item] of items.entries()) {
   const outputs = await session.run({
     [MODEL_SPEC.inputName]: new ort.Tensor("float32", input, [1, 3, candidateSpec.inputSize, candidateSpec.inputSize]),
   });
-  const output = outputs[MODEL_SPEC.outputName];
+  const output = outputs[candidateSpec.outputName];
   if (!output) throw new Error(`Missing model output for ${item.id}`);
   const logits = Array.from(output.data as Float32Array);
   const rawAiLikelihood = candidateSpec.singleLogit

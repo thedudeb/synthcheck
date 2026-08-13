@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "method": "Platt scaling over raw probability logits",
+  "slope": 5.075272455554085,
+  "intercept": 1.7717697835732629,
+  "fittedOn": {
+    "split": "validation",
+    "count": 500,
+    "predictions": "benchmark/results/polimi-validation-predictions.jsonl",
+    "predictionsSha256": "d35e8e903dbf85d245c5d378ec5ae8dcaa094881a5a42f9f38a0c712e170792f"
+  },
+  "modelSha256": "327da4f966688c82caac774b7afe6e6f2929c820ef79c76fd3818970f7ba9bd8",
+  "objective": "unweighted binary cross-entropy",
+  "regularization": 0.000001,
+  "iterations": 7,
+  "logLossBefore": 0.5364827319812246,
+  "logLossAfter": 0.37061988033416177,
+  "note": "Freeze these parameters before evaluating any test or external dataset."
+}

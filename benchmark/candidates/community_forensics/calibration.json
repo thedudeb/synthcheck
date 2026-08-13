@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "method": "Monotonic log-odds intercept calibration",
+  "slope": 1,
+  "intercept": 3.563478187572664,
+  "rawDecisionThreshold": 0.05,
+  "displayDecisionThreshold": 0.65,
+  "fittedOn": {
+    "split": "validation",
+    "count": 500,
+    "predictions": "benchmark/results/community-forensics-validation-predictions.jsonl",
+    "predictionsSha256": "34d7b183403cbe829ad10b5426a4ed2984d85c7cfaf2f1eda19ae7127a8e70e2"
+  },
+  "modelSha256": "1a9a8ec0503cbae9d6fa0f3c5e96ced57a6d9a2a2ce2e923d8e954b4a11a1226",
+  "objective": "Balanced accuracy with a conservative threshold selected from the validation plateau",
+  "note": "Frozen before any Community Forensics candidate test-split evaluation. Maps raw p=0.05 to displayed p=0.65 without changing rank ordering."
+}
