@@ -1,5 +1,7 @@
 # SynthCheck
 
+![SynthCheck — private, local, offline AI image detection](docs/assets/synthcheck-submission-hero.png)
+
 SynthCheck is an MIT-licensed Chrome extension that estimates whether images on ordinary webpages are AI-generated. Image decoding, preprocessing, and ONNX inference run inside Chrome; pixels and image-derived features are never uploaded to an inference service.
 
 > **Submission status:** the exact 22 MB browser artifact scores **77.6% balanced accuracy** at the required displayed 65% threshold on a frozen 1,000-image diagnostic sample. That clears the bounty's 75.0% public development gate, but only the maintainers' private benchmark can determine whether a claim qualifies.
